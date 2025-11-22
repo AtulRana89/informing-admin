@@ -210,8 +210,8 @@ const SubTopicsPage = () => {
                   <tr>
                     <th className="w-12 px-4 py-3 border border-gray-300"></th>
                     <th className="px-4 py-3 border text-left text-gray-700 border-gray-300">Sub Topics</th>
-                    <th className="px-4 py-3 border w-20 border-gray-300 border-gray-300"></th>
-                    <th className="px-4 py-3 border w-20 border-gray-300 border-gray-300"></th>
+                    <th className="px-4 py-3 border w-20 border-gray-300 text-gray-700">Edit</th>
+                    <th className="px-4 py-3 border w-20 border-gray-300 text-gray-700">Delete</th>
                   </tr>
                 </thead>
 

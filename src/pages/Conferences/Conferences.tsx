@@ -1,9 +1,9 @@
 import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useNavigate } from "react-router-dom";
 import { deleteConference, fetchConferences, setCurrentPage } from "../../store/conferenceSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 
 const ConferencesPage = () => {
@@ -115,14 +115,14 @@ const ConferencesPage = () => {
         </div>
 
         {/* Results Count */}
-         {!isLoading && (
+        {!isLoading && (
           <div className="mb-4 text-sm text-gray-600">
             Showing {conferences.length} of {totalResults.toLocaleString()}{" "}
             conferences
           </div>
-        )} 
-       
-       
+        )}
+
+
         {/* Error Message */}
         {error && (
           <div className="mb-4 p-4 bg-red-50 border border-red-300 rounded-lg text-red-700">
@@ -156,7 +156,7 @@ const ConferencesPage = () => {
                     <th className="text-left px-4 py-3 text-center font-semibold text-gray-700 border border-gray-300 w-38">
                       Status
                     </th>
-                    <th className="w-20 px-4 py-3 border border-gray-300"></th>
+                    <th className="w-20 px-4 py-3 border border-gray-300 text-gray-700">Delete</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -184,7 +184,7 @@ const ConferencesPage = () => {
                       </td>
 
                       <td className="px-4 py-4 border border-gray-300">
-                        <span>
+                        <span className="text-gray-600">
                           {new Date(
                             conference.insertDate * 1000
                           ).toLocaleDateString("en-GB", {
@@ -197,17 +197,16 @@ const ConferencesPage = () => {
 
                       <td className="px-4 py-4 border border-gray-300">
                         <span
-                          className={`text-sm ${
-                            conference.status === "Published All"
-                              ? "text-green-600"
-                              : "text-gray-600"
-                          }`}
+                          className={`text-sm ${conference.status === "Published All"
+                            ? "text-green-600"
+                            : "text-gray-600"
+                            }`}
                         >
                           {conference.status}
                         </span>
                       </td>
 
-                      <td className="px-4 py-4 bg-transparent text-center border border-gray-300">
+                      {/* <td className="px-4 py-4 bg-transparent text-center border border-gray-300">
                         <button
                           onClick={(e) =>
                             handleDelete(conference.conferenceId, e)
@@ -216,6 +215,13 @@ const ConferencesPage = () => {
                         >
                           <Trash2 size={20} />
                         </button>
+                      </td> */}
+                      <td className="px-4 py-4 border text-center border-gray-300">
+                        <Trash2
+                          size={20}
+                          className="text-red-400 hover:text-red-600"
+                          onClick={(e) => handleDelete(conference.conferenceId, e)}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -241,11 +247,10 @@ const ConferencesPage = () => {
                     <button
                       key={index}
                       onClick={() => handlePageChange(page)}
-                      className={`px-4 py-2 rounded ${
-                        currentPage === page
-                          ? "bg-[#4A8BC2] text-white"
-                          : "text-gray-600 hover:bg-gray-100"
-                      }`}
+                      className={`px-4 py-2 rounded ${currentPage === page
+                        ? "bg-[#4A8BC2] text-white"
+                        : "text-gray-600 hover:bg-gray-100"
+                        }`}
                     >
                       {page}
                     </button>
