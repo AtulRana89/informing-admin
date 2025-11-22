@@ -124,7 +124,7 @@ const SubTopicsPage = () => {
 
     try {
       await dispatch(reorderSubTopics({ items: reordered })).unwrap();
-      toast.success("Order updated");
+      //toast.success("Order updated");
     } catch {
       toast.error("Failed to update order");
     }

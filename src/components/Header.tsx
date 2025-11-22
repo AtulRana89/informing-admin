@@ -2,6 +2,7 @@ import { Lock, LogOut, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import logo from "../assets/informing-science-logo.png";
 import Model from "../pages/ChangePassword.tsx";
+import { authService } from "../services.tsx";
 // Header Component
 const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -24,6 +25,7 @@ const Header = () => {
   const handleLogout = () => {
     // You can also clear tokens or call logout API here
     // localStorage.removeItem("token");
+    authService.logout()
     window.location.href = "/admin/login";
   };
 

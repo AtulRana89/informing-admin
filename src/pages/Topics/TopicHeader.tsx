@@ -5,8 +5,8 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 const TopicHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const id = params.get("id");
+  //const params = new URLSearchParams(location.search);
+  //const id = params.get("id");
   // ✅ State to toggle modal visibility
   //const [showNotepad, setShowNotepad] = useState(false);
 
@@ -34,7 +34,7 @@ const TopicHeader = () => {
                 //isNotepad
                   //? setShowNotepad(true)
                   //: 
-                  navigate(`/topic/${tab.path}?id=${id}`)
+                  navigate(`/topic/${tab.path}`)
               }
               className={`px-5 py-2 cursor-pointer rounded-xl text-[1vw] font-medium transition-colors
                 ${isActive
