@@ -209,7 +209,7 @@ const TopicsPage = () => {
                 <thead className="bg-gray-100">
                   <tr>
                     <th className="w-12 px-4 py-3 border"></th>
-                    <th className="px-4 py-3 border text-left text-black-600">Topics</th>
+                    <th className="px-4 py-3 border text-left text-gray-600">Topics</th>
                     <th className="px-4 py-3 border w-20"></th>
                     <th className="px-4 py-3 border w-20"></th>
                   </tr>

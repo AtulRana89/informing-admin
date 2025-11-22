@@ -209,14 +209,14 @@ const SubTopicsPage = () => {
                 <thead className="bg-gray-100">
                   <tr>
                     <th className="w-12 px-4 py-3 border"></th>
-                    <th className="px-4 py-3 border text-left">Sub Topics</th>
+                    <th className="px-4 py-3 border text-left text-gray-600">Sub Topics</th>
                     <th className="px-4 py-3 border w-20"></th>
                     <th className="px-4 py-3 border w-20"></th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {localList.map((st, i) => (
+                  {localList?.map((st, i) => (
                     <Draggable
                       key={st.subTopicId}
                       draggableId={st.subTopicId.toString()}
