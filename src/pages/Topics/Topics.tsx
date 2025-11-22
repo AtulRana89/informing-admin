@@ -57,14 +57,13 @@ const TopicsPage = () => {
 
   // preload local list when journals change
   useEffect(() => {
-    const mapped = journals.map(j => ({
+    const mapped = journals.map((j) => ({
       ...j,
-      journalId: j.topicId,   // convert to component's expected format
+      journalId: j.topicId, // convert to component's expected format
     }));
 
     setLocalList(mapped);
   }, [journals]);
-
 
   // ------------------------------------
   // Fetch journals
@@ -82,9 +81,7 @@ const TopicsPage = () => {
     if (filters.type) params.type = filters.type;
 
     dispatch(fetchJournals(params));
-
   }, [currentPage, filters, itemsPerPage, dispatch]);
-
 
   // ------------------------------------
   // delete
@@ -95,7 +92,8 @@ const TopicsPage = () => {
   ) => {
     e.stopPropagation();
 
-    if (!window.confirm("Are you sure you want to delete this journal?")) return;
+    if (!window.confirm("Are you sure you want to delete this journal?"))
+      return;
 
     try {
       await dispatch(deleteJournal(id)).unwrap();
@@ -175,7 +173,7 @@ const TopicsPage = () => {
     <div className="bg-[#fff] min-h-screen">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <div className="text-2xl font-light text-gray-600">Topics</div>
+          <div className="text-2xl font-light text-gray-600 ">Topics</div>
 
           <div
             onClick={() => navigate("/create-topic")}
@@ -204,14 +202,16 @@ const TopicsPage = () => {
               <table
                 ref={provided.innerRef}
                 {...provided?.droppableProps}
-                className="w-full border-collapse"
+                className="w-full border-collapse  border border-gray-300 "
               >
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th className="w-12 px-4 py-3 border"></th>
-                    <th className="px-4 py-3 border text-left text-gray-600">Topics</th>
-                    <th className="px-4 py-3 border w-20"></th>
-                    <th className="px-4 py-3 border w-20"></th>
+                <thead className="bg-gray-100 border border-gray-300">
+                  <tr className="border border-gray-300">
+                    <th className="w-12 px-4 py-3 border border-gray-300"></th>
+                    <th className="px-4 py-3 border text-left text-gray-600 border-gray-300">
+                      Topics
+                    </th>
+                    <th className="px-4 py-3 border w-20 border-gray-300"></th>
+                    <th className="px-4 py-3 border w-20 border-gray-300"></th>
                   </tr>
                 </thead>
 
@@ -226,16 +226,16 @@ const TopicsPage = () => {
                         <tr
                           ref={provided.innerRef}
                           {...provided?.draggableProps}
-                          className="hover:bg-gray-50 cursor-pointer"
+                          className="hover:bg-gray-50 cursor-pointer border-gray-300"
                         >
                           <td
-                            className="px-4 py-4 border text-center"
+                            className="px-4 py-4 border text-center border-gray-300"
                             {...provided?.dragHandleProps}
                           >
                             <GripVertical size={20} className="text-gray-400" />
                           </td>
 
-                          <td className="px-4 py-4 border">
+                          <td className="px-4 py-4 border border-gray-300">
                             <div>
                               <div
                                 onClick={() =>
@@ -257,7 +257,7 @@ const TopicsPage = () => {
                             </div>
                           </td>
 
-                          <td className="px-4 py-4 border text-center">
+                          <td className="px-4 py-4 border text-center border-gray-300">
                             <SquarePen
                               size={20}
                               className="hover:text-blue-800"
@@ -269,7 +269,7 @@ const TopicsPage = () => {
                             />
                           </td>
 
-                          <td className="px-4 py-4 border text-center">
+                          <td className="px-4 py-4 border text-center border-gray-300">
                             <Trash2
                               size={20}
                               className="text-red-400 hover:text-red-600"
@@ -304,10 +304,11 @@ const TopicsPage = () => {
                 <button
                   key={i}
                   onClick={() => handlePageChange(pg)}
-                  className={`px-4 py-2 rounded ${currentPage === pg
-                    ? "bg-[#4A8BC2] text-white"
-                    : "text-gray-600 hover:bg-gray-100"
-                    }`}
+                  className={`px-4 py-2 rounded ${
+                    currentPage === pg
+                      ? "bg-[#4A8BC2] text-white"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
                 >
                   {pg}
                 </button>
