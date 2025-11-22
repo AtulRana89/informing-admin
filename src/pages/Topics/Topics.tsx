@@ -216,7 +216,7 @@ const TopicsPage = () => {
                 </thead>
 
                 <tbody>
-                  {localList.map((journal, index) => (
+                  {localList?.map((journal, index) => (
                     <Draggable
                       key={journal.topicId}
                       draggableId={journal?.topicId?.toString()}
