@@ -187,7 +187,7 @@ const TopicsPage = () => {
 
         {!isLoading && (
           <div className="mb-4 text-sm text-gray-600">
-            Showing {localList.length} of {totalCount}
+            Showing {localList?.length} of {totalCount}
           </div>
         )}
 
@@ -203,7 +203,7 @@ const TopicsPage = () => {
             {(provided) => (
               <table
                 ref={provided.innerRef}
-                {...provided.droppableProps}
+                {...provided?.droppableProps}
                 className="w-full border-collapse"
               >
                 <thead className="bg-gray-100">
@@ -225,12 +225,12 @@ const TopicsPage = () => {
                       {(provided) => (
                         <tr
                           ref={provided.innerRef}
-                          {...provided.draggableProps}
+                          {...provided?.draggableProps}
                           className="hover:bg-gray-50 cursor-pointer"
                         >
                           <td
                             className="px-4 py-4 border text-center"
-                            {...provided.dragHandleProps}
+                            {...provided?.dragHandleProps}
                           >
                             <GripVertical size={20} className="text-gray-400" />
                           </td>
@@ -240,12 +240,12 @@ const TopicsPage = () => {
                               <div
                                 onClick={() =>
                                   navigate(
-                                    `/create-topic?journalId=${journal.topicId}`
+                                    `/create-topic?journalId=${journal?.topicId}`
                                   )
                                 }
                                 className="text-blue-600 hover:underline font-normal mb-1"
                               >
-                                {journal.name}
+                                {journal?.name}
                               </div>
 
                               <div
@@ -263,7 +263,7 @@ const TopicsPage = () => {
                               className="hover:text-blue-800"
                               onClick={() =>
                                 navigate(
-                                  `/create-topic?journalId=${journal.topicId}`
+                                  `/create-topic?journalId=${journal?.topicId}`
                                 )
                               }
                             />
@@ -273,7 +273,7 @@ const TopicsPage = () => {
                             <Trash2
                               size={20}
                               className="text-red-400 hover:text-red-600"
-                              onClick={(e) => handleDelete(journal.topicId, e)}
+                              onClick={(e) => handleDelete(journal?.topicId, e)}
                             />
                           </td>
                         </tr>
@@ -281,7 +281,7 @@ const TopicsPage = () => {
                     </Draggable>
                   ))}
 
-                  {provided.placeholder}
+                  {provided?.placeholder}
                 </tbody>
               </table>
             )}

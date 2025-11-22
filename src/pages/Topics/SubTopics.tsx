@@ -60,9 +60,9 @@ const SubTopicsPage = () => {
   // -----------------------------------------
   useEffect(() => {
     const converted = journals.map((j) => ({
-      subTopicId: j.subTopicId,
-      name: j.name,
-      overviewDescription: j.overviewDescription,
+      subTopicId: j?.subTopicId,
+      name: j?.name,
+      overviewDescription: j?.overviewDescription,
     }));
 
     setLocalList(converted);
@@ -187,7 +187,7 @@ const SubTopicsPage = () => {
 
         {!isLoading && (
           <div className="mb-4 text-sm text-gray-600">
-            Showing {localList.length} of {totalCount}
+            Showing {localList?.length} of {totalCount}
           </div>
         )}
 
@@ -203,7 +203,7 @@ const SubTopicsPage = () => {
             {(provided) => (
               <table
                 ref={provided.innerRef}
-                {...provided.droppableProps}
+                {...provided?.droppableProps}
                 className="w-full border-collapse"
               >
                 <thead className="bg-gray-100">
@@ -218,19 +218,19 @@ const SubTopicsPage = () => {
                 <tbody>
                   {localList?.map((st, i) => (
                     <Draggable
-                      key={st.subTopicId}
-                      draggableId={st.subTopicId.toString()}
+                      key={st?.subTopicId}
+                      draggableId={st?.subTopicId.toString()}
                       index={i}
                     >
                       {(provided) => (
                         <tr
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
+                          ref={provided?.innerRef}
+                          {...provided?.draggableProps}
                           className="hover:bg-gray-50 cursor-pointer"
                         >
                           <td
                             className="px-4 py-4 border text-center"
-                            {...provided.dragHandleProps}
+                            {...provided?.dragHandleProps}
                           >
                             <GripVertical size={20} className="text-gray-400" />
                           </td>
@@ -240,12 +240,12 @@ const SubTopicsPage = () => {
                               <div
                                 onClick={() =>
                                   navigate(
-                                    `/create-subtopic?journalId=${st.subTopicId}`
+                                    `/create-subtopic?journalId=${st?.subTopicId}`
                                   )
                                 }
                                 className="text-blue-600 hover:underline font-normal mb-1"
                               >
-                                {st.name}
+                                {st?.name}
                               </div>
 
                               <div
@@ -263,7 +263,7 @@ const SubTopicsPage = () => {
                               className="hover:text-blue-800"
                               onClick={() =>
                                 navigate(
-                                  `/create-subtopic?journalId=${st.subTopicId}`
+                                  `/create-subtopic?journalId=${st?.subTopicId}`
                                 )
                               }
                             />
@@ -273,7 +273,7 @@ const SubTopicsPage = () => {
                             <Trash2
                               size={20}
                               className="text-red-400 hover:text-red-600"
-                              onClick={(e) => handleDelete(st.subTopicId, e)}
+                              onClick={(e) => handleDelete(st?.subTopicId, e)}
                             />
                           </td>
                         </tr>
@@ -281,7 +281,7 @@ const SubTopicsPage = () => {
                     </Draggable>
                   ))}
 
-                  {provided.placeholder}
+                  {provided?.placeholder}
                 </tbody>
               </table>
             )}
