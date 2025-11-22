@@ -260,7 +260,7 @@ const TopicsPage = () => {
                           <td className="px-4 py-4 border border-gray-300 text-center">
                             <SquarePen
                               size={20}
-                              className="hover:text-blue-800"
+                              className="text-gray-900 hover:text-blue-800 hover:text-red-600"
                               onClick={() =>
                                 navigate(
                                   `/create-topic?journalId=${journal.topicId}`

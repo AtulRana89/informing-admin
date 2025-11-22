@@ -260,7 +260,7 @@ const SubTopicsPage = () => {
                           <td className="px-4 py-4 border text-center border-gray-300">
                             <SquarePen
                               size={20}
-                              className="hover:text-blue-800"
+                              className="text-gray-900 hover:text-blue-800"
                               onClick={() =>
                                 navigate(
                                   `/create-subtopic?journalId=${st.subTopicId}`
