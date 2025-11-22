@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { apiService } from '../services';
 
 interface Journal {
@@ -19,6 +19,16 @@ interface JournalListResponse {
   data: JournalListData;
 }
 
+
+interface JournalCombineListData {
+  list: Journal[];
+  totalCount: number;
+}
+
+interface JournalCombineListResponse {
+  data: JournalCombineListData;
+}
+
 interface FetchJournalsParams {
   offset: number;
   limit: number;
@@ -29,6 +39,7 @@ interface FetchJournalsParams {
 
 interface JournalState {
   journals: Journal[];
+  combineList: Journal[];
   totalCount: number;
   currentPage: number;
   itemsPerPage: number;
@@ -43,6 +54,7 @@ interface JournalState {
 
 const initialState: JournalState = {
   journals: [],
+  combineList: [],
   totalCount: 0,
   currentPage: 1,
   itemsPerPage: 10,
@@ -96,6 +108,27 @@ export const deleteJournal = createAsyncThunk<
   }
 );
 
+
+export const fetchCombineJournals = createAsyncThunk<
+  JournalCombineListData,
+  void,
+  { rejectValue: string }
+>(
+  'journals/combinelist',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await apiService.get<JournalCombineListResponse>(
+        '/journal/combinelist'
+      );
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || 'Failed to load journals'
+      );
+    }
+  }
+);
+
 const journalSlice = createSlice({
   name: 'journals',
   initialState,
@@ -131,6 +164,21 @@ const journalSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload || 'An error occurred';
         state.journals = [];
+      })
+      // Fetch journals combine
+      .addCase(fetchCombineJournals.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchCombineJournals.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.combineList = action.payload.list;
+        state.totalCount = action.payload.totalCount;
+      })
+      .addCase(fetchCombineJournals.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || 'An error occurred';
+        state.combineList = [];
       })
       // Delete journal
       .addCase(deleteJournal.pending, (state) => {

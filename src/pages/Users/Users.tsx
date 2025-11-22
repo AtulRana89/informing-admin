@@ -1,17 +1,20 @@
 import { ChevronLeft, ChevronRight, Clock, Trash2, User } from "lucide-react";
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import {
-  fetchUsers,
-  deleteUser,
-  setCurrentPage,
-  setActiveTab,
-  toggleUserSelection,
-  selectAllUsers,
-  deselectAllUsers,
-} from "../../store/userSlice";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { fetchCombineJournals } from "../../store/journalSlice";
+import {
+  deleteUser,
+  deselectAllUsers,
+  fetchUsers,
+  selectAllUsers,
+  setActiveTab,
+  setCurrentPage,
+  setSearchQuery,
+  setSearchType,
+  toggleUserSelection,
+} from "../../store/userSlice";
 
 const Users = () => {
   const dispatch = useAppDispatch();
@@ -29,8 +32,16 @@ const Users = () => {
     filters,
   } = useAppSelector((state) => state.users);
 
+  const { combineList } = useAppSelector((state) => state.journals);
+
   const queryParams = new URLSearchParams(location.search);
   const role = queryParams.get("role");
+
+
+  useEffect(() => {
+    dispatch(fetchCombineJournals());
+    console.log("Fetched combine journals :", combineList);
+  }, []);
 
   // Set active tab from URL
   useEffect(() => {
@@ -55,9 +66,11 @@ const Users = () => {
     if (filters.activeTab && filters.activeTab !== "User") {
       params.role = filters.activeTab.toLowerCase();
     }
-
+    if (filters.type) {
+      params.isiPosition = filters.type;
+    }
     dispatch(fetchUsers(params));
-  }, [currentPage, filters.searchQuery, filters.activeTab, limit, dispatch]);
+  }, [currentPage, filters.searchQuery, filters.activeTab, filters.type, limit, dispatch]);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -157,6 +170,7 @@ const Users = () => {
     // local UI
     //setActiveTab(lower);
     dispatch(setActiveTab(tabLabel));
+
     // redux
     //dispatch(setActiveTabInStore(lower));
     // update URL (replace so it doesn't spam history — change to push if you prefer)
@@ -179,11 +193,10 @@ const Users = () => {
           <button
             key={i}
             onClick={() => handlePageChange(i)}
-            className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${
-              currentPage === i
-                ? "bg-[#4A8BC2] text-white"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
+            className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${currentPage === i
+              ? "bg-[#4A8BC2] text-white"
+              : "text-gray-600 hover:bg-gray-100"
+              }`}
           >
             {i}
           </button>
@@ -195,11 +208,10 @@ const Users = () => {
         <button
           key={1}
           onClick={() => handlePageChange(1)}
-          className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${
-            currentPage === 1
-              ? "bg-[#4A8BC2] text-white"
-              : "text-gray-600 hover:bg-gray-100"
-          }`}
+          className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${currentPage === 1
+            ? "bg-[#4A8BC2] text-white"
+            : "text-gray-600 hover:bg-gray-100"
+            }`}
         >
           1
         </button>
@@ -223,11 +235,10 @@ const Users = () => {
           <button
             key={i}
             onClick={() => handlePageChange(i)}
-            className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${
-              currentPage === i
-                ? "bg-[#4A8BC2] text-white"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
+            className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${currentPage === i
+              ? "bg-[#4A8BC2] text-white"
+              : "text-gray-600 hover:bg-gray-100"
+              }`}
           >
             {i}
           </button>
@@ -247,11 +258,10 @@ const Users = () => {
         <button
           key={totalPages}
           onClick={() => handlePageChange(totalPages)}
-          className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${
-            currentPage === totalPages
-              ? "bg-[#4A8BC2] text-white"
-              : "text-gray-600 hover:bg-gray-100"
-          }`}
+          className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${currentPage === totalPages
+            ? "bg-[#4A8BC2] text-white"
+            : "text-gray-600 hover:bg-gray-100"
+            }`}
         >
           {totalPages}
         </button>
@@ -260,12 +270,15 @@ const Users = () => {
 
     return buttons;
   };
+  const handleType = (value: string) => {
+    dispatch(setSearchType(value));
+  };
 
   return (
     <div className="bg-[#fff] min-h-screen">
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-1">
           <div className="text-2xl font-light text-gray-600">Users</div>
           <div
             onClick={() =>
@@ -276,22 +289,93 @@ const Users = () => {
             + Add New
           </div>
         </div>
-        <div className="flex gap-3 py-2">
-          {["User", "Eic", "Admin","Duplicate"].map((tab) => (
-            <div
-              key={tab}
-              onClick={() => onTabClick(tab)}
-              className={`px-2 py-2 rounded-xl cursor-pointer ${
-                filters.activeTab == tab
+        <div className="flex justify-between">
+          <div className="flex gap-3 py-2">
+            {["User", "Eic", "Admin", "Duplicate"].map((tab) => (
+              <div
+                key={tab}
+                onClick={() => onTabClick(tab)}
+                className={`px-2 py-2 rounded-xl cursor-pointer ${filters.activeTab == tab
                   ? "!bg-[#568fce] text-white"
                   : "bg-white text-gray-400 border border-gray-300 hover:border-gray-400"
-              }`}
-            >
-              {tab}
-            </div>
-          ))}
-        </div>
+                  }`}
+              >
+                {tab}
+              </div>
+            ))}
+          </div>
 
+          <div className="flex gap-3 py-2">
+            <div className="flex items-center gap-3">
+              <select
+                disabled={isLoading}
+                onChange={(e) => handleType(e.target.value)}
+                className={`bg-[#FAFAFA] text-[14px] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+              >
+                <option value="">All Type</option>
+                <option value="reviewer">Reviewer</option>
+                <option value="editor">Editor</option>
+                <option value="Publisher">Publisher</option>
+                <option value="Author">Author</option>
+                <option value="UnverifiedAuthor">Unverified Article Author</option>
+                <option value="NoActiveEmails">Reviewer/Editor With No Active Emails</option>
+
+                <option value="">---------</option>
+                <option value="gackowski_award_winner">Gackowski Award Winner</option>
+                <option value="second_act">Second Act</option>
+                <option value="ambassador">Ambassador</option>
+                <option value="director">Director</option>
+                <option value="honorary_fellow">Honorary Fellow</option>
+                <option value="fellow">Fellow</option>
+                <option value="governor">Governor</option>
+                <option value="executive_director">Executive Director</option>
+                <option value="">---------</option>
+
+                <option value="isi_founder">Founder</option>
+                <option value="alumni">Alumni</option>
+                <option value="Member">Member</option>
+                <option value="LapsedMember">Lapsed Member</option>
+                <option value="landing_page">Featured</option>
+                <option value="HasTestimonial">Has Testimonial</option>
+                <option value="in_watchList">In Watchlist</option>
+                <option value="presented_paper">Presented Paper at InSITE</option>
+                <option value="best_paper">Best Paper for InSITE</option>
+              </select>
+            </div>
+            <div className="flex items-center gap-3">
+              <select
+                disabled={isLoading}
+                className={`bg-[#FAFAFA] text-[14px] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+              >
+                {combineList?.map((item: any) => (
+                  <option key={item.id} value={item.acronym}>
+                    {item.acronym}
+                  </option>
+                ))}
+                {/* <option value="">All Journals/Conferences</option>
+                <option value="Mr">Mr</option>
+                <option value="Ms">Ms</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Dr">Dr</option> */}
+              </select>
+            </div>
+            {/* Search Input */}
+            <div className="flex items-center flex-1">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={filters.searchQuery}
+                onChange={(e) =>
+                  dispatch(setSearchQuery(e.target.value))
+                }
+                className={`w-full text-[14px] bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+              />
+            </div>
+          </div>
+        </div>
         {/* Export and Batch Options */}
         <div className="flex items-center gap-4 mb-4 text-sm">
           <span className="text-gray-600">

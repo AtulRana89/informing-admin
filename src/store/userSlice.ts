@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { apiService } from '../services';
 
 interface UserData {
@@ -42,6 +42,7 @@ interface UserState {
     activeTab: string | null;
     typeFilter: string;
     searchQuery: string;
+    type: string;
   };
 }
 
@@ -58,6 +59,7 @@ const initialState: UserState = {
     activeTab: 'User',
     typeFilter: 'All Types',
     searchQuery: '',
+    type: '',
   },
 };
 
@@ -71,7 +73,7 @@ export const fetchUsers = createAsyncThunk<
   async (params, { rejectWithValue }) => {
     try {
       const response = await apiService.get<UserListResponse>('/user/list', { params });
-      
+
       // Handle different response structures
       const data = response.data || response;
       const userList = data?.list || (data as any).data || [];
@@ -111,6 +113,7 @@ export const deleteUser = createAsyncThunk<
   }
 );
 
+
 const userSlice = createSlice({
   name: 'users',
   initialState,
@@ -128,6 +131,10 @@ const userSlice = createSlice({
     },
     setSearchQuery: (state, action: PayloadAction<string>) => {
       state.filters.searchQuery = action.payload;
+      state.currentPage = 1;
+    },
+    setSearchType: (state, action: PayloadAction<string>) => {
+      state.filters.type = action.payload;
       state.currentPage = 1;
     },
     setSelectedUsers: (state, action: PayloadAction<string[]>) => {
@@ -200,6 +207,7 @@ export const {
   setActiveTab,
   setTypeFilter,
   setSearchQuery,
+  setSearchType,
   setSelectedUsers,
   toggleUserSelection,
   selectAllUsers,

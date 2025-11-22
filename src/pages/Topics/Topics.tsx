@@ -6,24 +6,24 @@ import {
   Trash2,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 import {
-  fetchJournals,
   deleteJournal,
-  setCurrentPage,
+  fetchJournals,
+  FetchJournalsParams,
   ReorderItem,
   reorderTopics,
-  FetchJournalsParams,
+  setCurrentPage,
 } from "../../store/topicSlice";
 
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 import {
   DragDropContext,
-  Droppable,
   Draggable,
+  Droppable,
   DropResult,
 } from "@hello-pangea/dnd";
 
@@ -57,33 +57,33 @@ const TopicsPage = () => {
 
   // preload local list when journals change
   useEffect(() => {
-  const mapped = journals.map(j => ({
-    ...j,
-    journalId: j.topicId,   // convert to component's expected format
-  }));
+    const mapped = journals.map(j => ({
+      ...j,
+      journalId: j.topicId,   // convert to component's expected format
+    }));
 
-  setLocalList(mapped);
-}, [journals]);
+    setLocalList(mapped);
+  }, [journals]);
 
 
   // ------------------------------------
   // Fetch journals
   // ------------------------------------
   useEffect(() => {
-  const offset = (currentPage - 1) * itemsPerPage;
+    const offset = (currentPage - 1) * itemsPerPage;
 
-  const params: FetchJournalsParams = {
-    offset,
-    limit: itemsPerPage,
-  };
+    const params: FetchJournalsParams = {
+      offset,
+      limit: itemsPerPage,
+    };
 
-  if (filters.searchText) params.text = filters.searchText;
-  if (filters.journalId) params.journalId = filters.journalId;
-  if (filters.type) params.type = filters.type;
+    if (filters.searchText) params.text = filters.searchText;
+    if (filters.journalId) params.journalId = filters.journalId;
+    if (filters.type) params.type = filters.type;
 
-  dispatch(fetchJournals(params));
+    dispatch(fetchJournals(params));
 
-}, [currentPage, filters, itemsPerPage, dispatch]);
+  }, [currentPage, filters, itemsPerPage, dispatch]);
 
 
   // ------------------------------------
@@ -132,9 +132,9 @@ const TopicsPage = () => {
 
     try {
       await dispatch(reorderTopics({ items: reorderedPayload })).unwrap();
-      toast.success("Order updated");
+      // toast.success("Order updated");
     } catch {
-      toast.error("Failed to update order");
+      // toast.error("Failed to update order");
     }
   };
 
@@ -209,7 +209,7 @@ const TopicsPage = () => {
                 <thead className="bg-gray-100">
                   <tr>
                     <th className="w-12 px-4 py-3 border"></th>
-                    <th className="px-4 py-3 border text-left">Topics</th>
+                    <th className="px-4 py-3 border text-left text-black-600">Topics</th>
                     <th className="px-4 py-3 border w-20"></th>
                     <th className="px-4 py-3 border w-20"></th>
                   </tr>
@@ -304,11 +304,10 @@ const TopicsPage = () => {
                 <button
                   key={i}
                   onClick={() => handlePageChange(pg)}
-                  className={`px-4 py-2 rounded ${
-                    currentPage === pg
-                      ? "bg-[#4A8BC2] text-white"
-                      : "text-gray-600 hover:bg-gray-100"
-                  }`}
+                  className={`px-4 py-2 rounded ${currentPage === pg
+                    ? "bg-[#4A8BC2] text-white"
+                    : "text-gray-600 hover:bg-gray-100"
+                    }`}
                 >
                   {pg}
                 </button>
