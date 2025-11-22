@@ -208,10 +208,10 @@ const TopicsPage = () => {
               >
                 <thead className="bg-gray-100">
                   <tr>
-                    <th className="w-12 px-4 py-3 border"></th>
-                    <th className="px-4 py-3 border text-left text-gray-600">Topics</th>
-                    <th className="px-4 py-3 border w-20"></th>
-                    <th className="px-4 py-3 border w-20"></th>
+                    <th className="w-12 px-4 py-3 border border-gray-300"></th>
+                    <th className="px-4 py-3 border text-left text-gray-700 border border-gray-300">Topics</th>
+                    <th className="px-4 py-3 border w-20 border-gray-300"></th>
+                    <th className="px-4 py-3 border w-20 border-gray-300"></th>
                   </tr>
                 </thead>
 
@@ -229,13 +229,13 @@ const TopicsPage = () => {
                           className="hover:bg-gray-50 cursor-pointer"
                         >
                           <td
-                            className="px-4 py-4 border text-center"
+                            className="px-4 py-4 border text-center border-gray-300"
                             {...provided.dragHandleProps}
                           >
                             <GripVertical size={20} className="text-gray-400" />
                           </td>
 
-                          <td className="px-4 py-4 border">
+                          <td className="px-4 py-4 border border-gray-300">
                             <div>
                               <div
                                 onClick={() =>
@@ -257,7 +257,7 @@ const TopicsPage = () => {
                             </div>
                           </td>
 
-                          <td className="px-4 py-4 border text-center">
+                          <td className="px-4 py-4 border border-gray-300 text-center">
                             <SquarePen
                               size={20}
                               className="hover:text-blue-800"
@@ -269,7 +269,7 @@ const TopicsPage = () => {
                             />
                           </td>
 
-                          <td className="px-4 py-4 border text-center">
+                          <td className="px-4 py-4 border border-gray-300 text-center">
                             <Trash2
                               size={20}
                               className="text-red-400 hover:text-red-600"
