@@ -1,0 +1,72 @@
+//import { useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+//import Notepad from "./Notepad";
+
+const Profile = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const id = params.get("id");
+  // ✅ State to toggle modal visibility
+  //const [showNotepad, setShowNotepad] = useState(false);
+
+  const tabs = [
+    { label: "Personal Info", path: "personal-info" },
+    { label: "Account Info", path: "account-info" },
+    { label: "Academic Info", path: "academic-info" },
+    { label: "Topics", path: "topics" },
+    { label: "Preferences", path: "preferences" },
+    { label: "Your Notepad", path: "notepad" },
+  ];
+
+  return (
+    <div className="p-8 bg-white w-full">
+      {/* Header */}
+      <div
+        className="text-[2vw] text-gray-800 mb-6"
+        style={{ fontWeight: 300 }}
+      >
+        Your Profile
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-3 mb-8">
+        {tabs.map((tab) => {
+          const isActive = location.pathname.endsWith(tab.path);
+          //const isNotepad = tab.label === "Your Notepad";
+
+          return (
+            <div
+              key={tab.path}
+              onClick={() =>
+                //isNotepad
+                  //? setShowNotepad(true)
+                  //: 
+                  navigate(`/profile/${tab.path}?id=${id}`)
+              }
+              className={`px-5 py-2 cursor-pointer rounded-xl text-[1vw] font-medium transition-colors
+                ${isActive
+                  ? "bg-[#568fce] text-white"
+                  : "text-gray-400 bg-white border border-gray-200 hover:border-gray-400"
+                }`}
+            >
+              {tab.label}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Nested Page Content */}
+      <Outlet />
+
+      {/* ✅ Notepad Modal */}
+      {/* {showNotepad && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <Notepad setShowNotepad={setShowNotepad} />
+        </div>
+      )} */}
+    </div>
+  );
+};
+
+export default Profile;
