@@ -198,7 +198,7 @@ const Tracks = () => {
                             )
                           }
                           size={20}
-                          className="hover:text-blue-800"
+                          className="hover:text-blue-800 text-gray-600"
                         />
                       </td>
                       <td className="px-4 py-4 bg-transparent text-center border border-gray-300">
