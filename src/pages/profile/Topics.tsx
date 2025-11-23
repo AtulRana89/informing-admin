@@ -363,17 +363,17 @@ const Topics = () => {
             </select>
 
             {/* Arrow buttons positioned on the right side of the select box */}
-            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col gap-2">
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col gap-2 ">
               <button
                 onClick={moveUp}
-                className="p-1.5 bg-gray-200 hover:bg-gray-300 rounded-full shadow-sm"
+                className="p-1.5 bg-gray-200 hover:bg-gray-300 rounded-full shadow-sm !bg-white"
                 title="Move up"
               >
-                <ChevronsUp className="w-4 h-4 text-gray-700" />
+                <ChevronsUp className="w-4 h-4 text-gray-700 " />
               </button>
               <button
                 onClick={moveDown}
-                className="p-1.5 bg-gray-200 hover:bg-gray-300 rounded-full shadow-sm"
+                className="p-1.5 bg-gray-200 hover:bg-gray-300 rounded-full shadow-sm !bg-white"
                 title="Move down"
               >
                 <ChevronsDown className="w-4 h-4 text-gray-700" />
