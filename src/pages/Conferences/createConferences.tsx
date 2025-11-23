@@ -1,28 +1,28 @@
-import { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useNavigate } from "react-router-dom";
 import {
   Bold,
+  Code,
   Italic,
-  Underline,
   List,
   ListOrdered,
-  Undo,
   Redo,
   Strikethrough,
-  Code,
+  Underline,
+  Undo,
 } from "lucide-react";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { z } from "zod";
 import { apiService } from "../../services";
 
 // Note: You need to install these packages:
 // npm install @tiptap/react @tiptap/starter-kit @tiptap/extension-underline
 
 // Import TipTap
+import UnderlineExtension from '@tiptap/extension-underline';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import UnderlineExtension from '@tiptap/extension-underline';
 import toast from "react-hot-toast";
 
 // Zod Schema
@@ -30,7 +30,7 @@ const conferenceSchema = z.object({
   title: z.string().min(1, "Title is required"),
   acronym: z.string().min(1, "Acronym is required"),
   message: z.string().min(1, "Invitation message is required"),
-  legacyExternalUrl: z.string().optional().or(z.literal("")),
+  legacyExternalUrl: z.string().url({ message: "Please enter a valid URL" }).optional().or(z.literal("")),
   onlineIssn: z.string().optional().or(z.literal("")),
   printIssn: z.string().optional().or(z.literal("")),
   status: z.string().min(1, "Status is required"),
@@ -44,12 +44,12 @@ const conferenceSchema = z.object({
 type ConferenceFormData = z.infer<typeof conferenceSchema>;
 
 // TipTap Rich Text Editor Component
-const TipTapEditor = ({ 
-  value, 
-  onChange, 
-  error 
-}: { 
-  value: string; 
+const TipTapEditor = ({
+  value,
+  onChange,
+  error
+}: {
+  value: string;
   onChange: (value: string) => void;
   error?: string;
 }) => {
@@ -85,16 +85,16 @@ const TipTapEditor = ({
     return <div className="p-4 text-gray-500">Loading editor...</div>;
   }
 
-  const MenuButton = ({ 
-    onClick, 
-    isActive, 
-    disabled, 
-    children, 
-    title 
-  }: { 
-    onClick: () => void; 
-    isActive?: boolean; 
-    disabled?: boolean; 
+  const MenuButton = ({
+    onClick,
+    isActive,
+    disabled,
+    children,
+    title
+  }: {
+    onClick: () => void;
+    isActive?: boolean;
+    disabled?: boolean;
     children: React.ReactNode;
     title?: string;
   }) => (
@@ -125,7 +125,7 @@ const TipTapEditor = ({
           >
             <Bold className="w-4 h-4" />
           </MenuButton>
-          
+
           <MenuButton
             onClick={() => editor.chain().focus().toggleItalic().run()}
             isActive={editor.isActive('italic')}
@@ -133,7 +133,7 @@ const TipTapEditor = ({
           >
             <Italic className="w-4 h-4" />
           </MenuButton>
-          
+
           <MenuButton
             onClick={() => editor.chain().focus().toggleUnderline().run()}
             isActive={editor.isActive('underline')}
@@ -141,7 +141,7 @@ const TipTapEditor = ({
           >
             <Underline className="w-4 h-4" />
           </MenuButton>
-          
+
           <MenuButton
             onClick={() => editor.chain().focus().toggleStrike().run()}
             isActive={editor.isActive('strike')}
@@ -149,7 +149,7 @@ const TipTapEditor = ({
           >
             <Strikethrough className="w-4 h-4" />
           </MenuButton>
-          
+
           <MenuButton
             onClick={() => editor.chain().focus().toggleCode().run()}
             isActive={editor.isActive('code')}
@@ -159,15 +159,15 @@ const TipTapEditor = ({
           </MenuButton>
 
           {/* Heading Dropdown */}
-          <select 
+          <select
             className="px-2 py-1 border border-gray-300 bg-white text-sm cursor-pointer"
             value={
               editor.isActive('heading', { level: 1 }) ? '1' :
-              editor.isActive('heading', { level: 2 }) ? '2' :
-              editor.isActive('heading', { level: 3 }) ? '3' :
-              editor.isActive('heading', { level: 4 }) ? '4' :
-              editor.isActive('heading', { level: 5 }) ? '5' :
-              editor.isActive('heading', { level: 6 }) ? '6' : '0'
+                editor.isActive('heading', { level: 2 }) ? '2' :
+                  editor.isActive('heading', { level: 3 }) ? '3' :
+                    editor.isActive('heading', { level: 4 }) ? '4' :
+                      editor.isActive('heading', { level: 5 }) ? '5' :
+                        editor.isActive('heading', { level: 6 }) ? '6' : '0'
             }
             onChange={(e) => {
               const level = parseInt(e.target.value);
@@ -197,7 +197,7 @@ const TipTapEditor = ({
           >
             <List className="w-4 h-4" />
           </MenuButton>
-          
+
           <MenuButton
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
             isActive={editor.isActive('orderedList')}
@@ -234,7 +234,7 @@ const TipTapEditor = ({
           >
             <Undo className="w-4 h-4" />
           </MenuButton>
-          
+
           <MenuButton
             onClick={() => editor.chain().focus().redo().run()}
             disabled={!editor.can().redo()}
@@ -350,7 +350,7 @@ export default function ConferenceForm() {
       console.error("Error saving conference:", error);
       toast.error(
         error?.response?.data?.message ||
-          "Failed to save conference. Please try again."
+        "Failed to save conference. Please try again."
       );
     }
   };
@@ -436,6 +436,9 @@ export default function ConferenceForm() {
               {...register("legacyExternalUrl")}
               className="w-full px-3 py-2 border border-gray-300 !bg-[#FAFAFA] focus:outline-none focus:ring-1"
             />
+            {errors.legacyExternalUrl && (
+              <p className="text-red-500 text-sm mt-1">{errors.legacyExternalUrl.message}</p>
+            )}
           </div>
 
           {/* Online ISSN */}

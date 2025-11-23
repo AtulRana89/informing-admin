@@ -190,7 +190,7 @@ const Tracks = () => {
                           />
                         </div>
                       </td>
-                      <td className="px-4 py-4 border border-gray-300">
+                      <td className="px-4 py-4 border border-gray-300 text-center">
                         <SquarePen
                           onClick={() =>
                             navigate(
@@ -198,9 +198,10 @@ const Tracks = () => {
                             )
                           }
                           size={20}
-                          className="hover:text-blue-800"
+                          className="text-gray-900 hover:text-blue-800 hover:text-red-600"
                         />
                       </td>
+
                       <td className="px-4 py-4 border border-gray-300 text-center">
                         <Trash2
                           size={20}

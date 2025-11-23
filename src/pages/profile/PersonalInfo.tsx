@@ -2,9 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import * as z from "zod";
 import { apiService } from "../../services";
-import toast from "react-hot-toast";
 
 
 // Define the validation schema
@@ -283,9 +283,9 @@ const PersonalInfo = () => {
                   }`}
               >
                 <option value=""></option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
               </select>
             </div>
 
@@ -422,7 +422,7 @@ const PersonalInfo = () => {
                   Primary Telephone Number
                 </label>
                 <input
-                  type="tel"
+                  type="number"
                   {...register("primaryPhone")}
                   disabled={isLoading}
                   className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
@@ -434,7 +434,7 @@ const PersonalInfo = () => {
                   Secondary Telephone Number
                 </label>
                 <input
-                  type="tel"
+                  type="number"
                   {...register("secondaryPhone")}
                   disabled={isLoading}
                   className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
