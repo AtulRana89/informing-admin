@@ -6,13 +6,18 @@ import * as z from "zod";
 import { apiService } from "../../services";
 import toast from "react-hot-toast";
 
-
 // Define the validation schema
 const personalInfoSchema = z.object({
   personalTitle: z.string().optional(),
-  personalName: z.string().min(1, "Personal name is required").min(2, "Personal name must be at least 2 characters"),
+  personalName: z
+    .string()
+    .min(1, "Personal name is required")
+    .min(2, "Personal name must be at least 2 characters"),
   middleInitial: z.string().optional(),
-  familyName: z.string().min(1, "Family name is required").min(2, "Family name must be at least 2 characters"),
+  familyName: z
+    .string()
+    .min(1, "Family name is required")
+    .min(2, "Family name must be at least 2 characters"),
   gender: z.string().optional(),
   address: z.string().optional(),
   city: z.string().min(1, "City is required"),
@@ -132,7 +137,10 @@ const PersonalInfo = () => {
       let profilePicUrl = photoPreview;
       if (photoFile) {
         try {
-          const uploadResponse = await apiService.uploadFile("/upload/profile-pic", photoFile);
+          const uploadResponse = await apiService.uploadFile(
+            "/upload/profile-pic",
+            photoFile
+          );
           profilePicUrl = uploadResponse.url || uploadResponse.path;
         } catch (uploadErr) {
           console.error("Photo upload failed:", uploadErr);
@@ -210,8 +218,9 @@ const PersonalInfo = () => {
               <select
                 {...register("personalTitle")}
                 disabled={isLoading}
-                className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 <option value=""></option>
                 <option value="Mr">Mr</option>
@@ -231,12 +240,16 @@ const PersonalInfo = () => {
                   type="text"
                   {...register("personalName")}
                   disabled={isLoading}
-                  className={`w-full bg-[#FAFAFA] border ${errors.personalName ? "border-red-500" : "border-gray-300"
-                    } rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                  className={`w-full bg-[#FAFAFA] border ${
+                    errors.personalName ? "border-red-500" : "border-gray-300"
+                  } rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${
+                    isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 />
                 {errors.personalName && (
-                  <p className="text-red-600 text-sm mt-1">{errors.personalName.message}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.personalName.message}
+                  </p>
                 )}
               </div>
               <div>
@@ -247,8 +260,9 @@ const PersonalInfo = () => {
                   type="text"
                   {...register("middleInitial")}
                   disabled={isLoading}
-                  className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                  className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${
+                    isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 />
               </div>
             </div>
@@ -262,12 +276,16 @@ const PersonalInfo = () => {
                 type="text"
                 {...register("familyName")}
                 disabled={isLoading}
-                className={`w-full bg-[#FAFAFA] border ${errors.familyName ? "border-red-500" : "border-gray-300"
-                  } rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`w-full bg-[#FAFAFA] border ${
+                  errors.familyName ? "border-red-500" : "border-gray-300"
+                } rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               />
               {errors.familyName && (
-                <p className="text-red-600 text-sm mt-1">{errors.familyName.message}</p>
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.familyName.message}
+                </p>
               )}
             </div>
 
@@ -279,8 +297,9 @@ const PersonalInfo = () => {
               <select
                 {...register("gender")}
                 disabled={isLoading}
-                className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 <option value=""></option>
                 <option value="Male">Male</option>
@@ -300,7 +319,11 @@ const PersonalInfo = () => {
               <div className="flex flex-col items-start gap-4">
                 <div className="w-32 h-32 bg-gray-200 rounded flex items-center justify-center overflow-hidden">
                   {photoPreview ? (
-                    <img src={photoPreview} alt="Profile" className="w-full h-full object-cover" />
+                    <img
+                      src={photoPreview}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
                     <User size={64} className="text-white" strokeWidth={1.5} />
                   )}
@@ -317,8 +340,9 @@ const PersonalInfo = () => {
                   <div>
                     <label
                       htmlFor="photo"
-                      className={`bg-[#FAFAFA] cursor-pointer bg-white border border-gray-400 rounded px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-50 inline-block ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
+                      className={`bg-[#FAFAFA] cursor-pointer bg-white border border-gray-400 rounded px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-50 inline-block ${
+                        isLoading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                     >
                       Choose File
                     </label>
@@ -342,8 +366,9 @@ const PersonalInfo = () => {
                 {...register("address")}
                 disabled={isLoading}
                 rows={3}
-                className={`bg-[#FAFAFA] resize w-full border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`bg-[#FAFAFA] resize w-full border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               />
             </div>
 
@@ -356,12 +381,16 @@ const PersonalInfo = () => {
                 type="text"
                 {...register("city")}
                 disabled={isLoading}
-                className={`w-full bg-[#FAFAFA] border ${errors.city ? "border-red-500" : "border-gray-300"
-                  } rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`w-full bg-[#FAFAFA] border ${
+                  errors.city ? "border-red-500" : "border-gray-300"
+                } rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               />
               {errors.city && (
-                <p className="text-red-600 text-sm mt-1">{errors.city.message}</p>
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.city.message}
+                </p>
               )}
             </div>
 
@@ -375,8 +404,9 @@ const PersonalInfo = () => {
                   type="text"
                   {...register("stateProvince")}
                   disabled={isLoading}
-                  className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                  className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${
+                    isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 />
               </div>
               <div>
@@ -387,8 +417,9 @@ const PersonalInfo = () => {
                   type="text"
                   {...register("postalCode")}
                   disabled={isLoading}
-                  className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                  className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${
+                    isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 />
               </div>
             </div>
@@ -401,9 +432,11 @@ const PersonalInfo = () => {
               <select
                 {...register("country")}
                 disabled={isLoading}
-                className={`w-full bg-[#FAFAFA] border ${errors.country ? "border-red-500" : "border-gray-300"
-                  } rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`w-full bg-[#FAFAFA] border ${
+                  errors.country ? "border-red-500" : "border-gray-300"
+                } rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 <option value="India">India</option>
                 <option value="USA">USA</option>
@@ -411,7 +444,9 @@ const PersonalInfo = () => {
                 <option value="Canada">Canada</option>
               </select>
               {errors.country && (
-                <p className="text-red-600 text-sm mt-1">{errors.country.message}</p>
+                <p className="text-red-600 text-sm mt-1">
+                  {errors.country.message}
+                </p>
               )}
             </div>
 
@@ -424,9 +459,14 @@ const PersonalInfo = () => {
                 <input
                   type="tel"
                   {...register("primaryPhone")}
+                  onInput={(e: any) => {
+                    e.target.value = e.target.value.replace(/\D/g, ""); // REMOVE all non-digits
+                  }}
+                  maxLength={10} // optional
                   disabled={isLoading}
-                  className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                  className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${
+                    isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 />
               </div>
               <div>
@@ -436,9 +476,14 @@ const PersonalInfo = () => {
                 <input
                   type="tel"
                   {...register("secondaryPhone")}
+                  onInput={(e: any) => {
+                    e.target.value = e.target.value.replace(/\D/g, ""); // REMOVE all non-digits
+                  }}
+                  maxLength={10} // optional
                   disabled={isLoading}
-                  className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
+                  className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${
+                    isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 />
               </div>
             </div>
@@ -450,8 +495,9 @@ const PersonalInfo = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className={` !bg-[#3d7ab5] hover:!bg-[#2b5f85] !border-[#2b5f85]  cursor-pointer border  border-x-0 border-b-4  text-white font-medium px-8 py-2.5 transition ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+            className={` !bg-[#3d7ab5] hover:!bg-[#2b5f85] !border-[#2b5f85]  cursor-pointer border  border-x-0 border-b-4  text-white font-medium px-8 py-2.5 transition ${
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
             {isLoading ? "Saving..." : "Save"}
           </button>
@@ -459,8 +505,9 @@ const PersonalInfo = () => {
             type="button"
             onClick={handleCancel}
             disabled={isLoading}
-            className={`!bg-gray-200 cursor-pointer border-gray-300 border-x-0 border-b-4 hover:!bg-gray-300 text-gray-700 font-medium px-8 py-2.5 transition ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+            className={`!bg-gray-200 cursor-pointer border-gray-300 border-x-0 border-b-4 hover:!bg-gray-300 text-gray-700 font-medium px-8 py-2.5 transition ${
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
             Cancel
           </button>
