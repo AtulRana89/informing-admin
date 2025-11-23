@@ -59,7 +59,7 @@ const TipTapEditor = ({ value, onChange, error }: any) => {
       type="button"
       onClick={onClick}
       title={title}
-      className={`px-2 py-1 hover:bg-gray-200 border border-gray-300 !bg-white transition-colors ${
+      className={`px-2 py-1 hover:bg-gray-200 border  text-gray-600 border-gray-300 !bg-white transition-colors ${
         isActive ? "!bg-gray-300" : ""
       }`}
     >
@@ -137,7 +137,7 @@ const TipTapEditor = ({ value, onChange, error }: any) => {
           <MenuButton
             onClick={() => editor.chain().focus().redo().run()}
             title="Redo"
-            
+            className="text-red-600"
           >
             <Redo className="w-4 h-4" />
           </MenuButton>
