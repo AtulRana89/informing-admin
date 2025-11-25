@@ -147,6 +147,7 @@ const ConferencesPage = () => {
               <table className="w-full border-collapse">
                 <thead className="bg-gray-100">
                   <tr>
+                    <th className="w-12 px-4 py-3 border border-gray-300 text-gray-700">Sr.no</th>
                     <th className="text-left px-4 py-3 font-semibold text-gray-700 border border-gray-300">
                       Conference
                     </th>
@@ -160,11 +161,20 @@ const ConferencesPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {conferences.map((conference) => (
+                  {conferences.map((conference,index) => (
                     <tr
                       key={conference.conferenceId}
                       className="hover:bg-gray-50 cursor-pointer"
                     >
+                      <td className="px-4 py-4 border border-gray-300 text-center text-gray-700">
+                        {/* <button
+                          className="text-gray-400 hover:text-gray-600 cursor-move"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <GripVertical size={20} />
+                        </button> */}
+                        {(currentPage - 1) * itemsPerPage + (index + 1)}
+                      </td>
                       <td className="px-4 py-4 border border-gray-300">
                         <div>
                           <div

@@ -145,7 +145,7 @@ const Tracks = () => {
               <table className="w-full border-collapse">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th className="w-12 px-4 py-3 border border-gray-300"></th>
+                    <th className="w-12 px-4 py-3 border border-gray-300 text-gray-700">Sr.no</th>
                     <th className="text-left px-4 py-3 font-semibold text-gray-700 border border-gray-300">
                       Tracks
                     </th>
