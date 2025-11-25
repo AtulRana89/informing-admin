@@ -77,6 +77,20 @@ select {
   padding-left: 1.5em;
 }
 
+.scrollbar-white::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-white::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 6px;
+}
+
+.scrollbar-white::-webkit-scrollbar-track {
+  background: #d1d5db;
+}
+
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

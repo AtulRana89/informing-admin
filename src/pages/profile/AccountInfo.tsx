@@ -12,7 +12,7 @@ const accountInfoSchema = z.object({
   email: z.string().min(1, "Primary email is required").email("Invalid email address"),
   receivePrimaryEmail: z.boolean().optional(),
   receiveReminderEmail: z.boolean().optional(),
-  secondaryEmail: z.string().email("Invalid email address").optional().or(z.literal("")),
+  receiveSecondaryEmail: z.string().email("Invalid email address").optional().or(z.literal("")),
   // receiveSecondary: z.boolean().optional(),
 
   // Admin Settings - Left Column
@@ -85,7 +85,7 @@ const AccountInfo = () => {
       email: '',
       receivePrimaryEmail: true,
       receiveReminderEmail: false,
-      secondaryEmail: '',
+      receiveSecondaryEmail: '',
       // username: '',
       role: 'admin',
       status: 'active',
@@ -132,7 +132,7 @@ const AccountInfo = () => {
         setValue("receivePrimaryEmail", response.receivePrimaryEmail ?? true);
         setValue("receiveReminderEmail", response.receiveReminderEmail ?? true);
 
-        setValue("secondaryEmail", response.secondaryEmail || "");
+        setValue("receiveSecondaryEmail", response.receiveSecondaryEmail || "");
         // setValue("receiveSecondary", response.receiveSecondaryEmail ?? false);
         // setValue("username", response.username || "");
         setValue("role", response.role || "admin");
@@ -203,7 +203,7 @@ const AccountInfo = () => {
         email: data.email,
         receivePrimaryEmail: data.receivePrimaryEmail,
         receiveReminderEmail: data.receiveReminderEmail,
-        receiveSecondaryEmail: data.secondaryEmail || "",
+        receiveSecondaryEmail: data.receiveSecondaryEmail || "",
         // username: data.username || "",
         isPendingAuthor: data.isPendingAuthor,
         testimonial: data.testimonial || "",
@@ -325,14 +325,14 @@ const AccountInfo = () => {
               </p>
               <input
                 type="email"
-                {...register("secondaryEmail")}
+                {...register("receiveSecondaryEmail")}
                 disabled={isLoading}
-                className={`w-full bg-[#FAFAFA] border ${errors.secondaryEmail ? "border-red-500" : "border-gray-300"
+                className={`w-full bg-[#FAFAFA] border ${errors.receiveSecondaryEmail ? "border-red-500" : "border-gray-300"
                   } rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
                   }`}
               />
-              {errors.secondaryEmail && (
-                <p className="text-red-600 text-sm mt-1">{errors.secondaryEmail.message}</p>
+              {errors.receiveSecondaryEmail && (
+                <p className="text-red-600 text-sm mt-1">{errors.receiveSecondaryEmail.message}</p>
               )}
             </div>
 
