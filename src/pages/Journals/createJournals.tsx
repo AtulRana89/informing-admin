@@ -403,7 +403,7 @@ export default function JournalForm() {
       } else {
         // Create new journal
         await apiService.post("/journal/", data);
-        toast.error("Journal created successfully!");
+        toast.success("Journal created successfully!");
       }
 
       // Navigate back to journals list
