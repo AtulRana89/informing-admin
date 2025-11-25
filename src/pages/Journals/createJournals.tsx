@@ -129,7 +129,7 @@ const TipTapEditor = ({
       onClick={onClick}
       disabled={btnDisabled || disabled}
       title={title}
-      className={`px-2 py-1 hover:bg-gray-200 border border-gray-300 bg-white transition-colors
+      className={`px-2 py-1 hover:bg-gray-200  border border-gray-300 text-gray-600 !bg-white transition-colors
         ${isActive ? '!bg-gray-300' : ''}
         ${(btnDisabled || disabled) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
       `}
