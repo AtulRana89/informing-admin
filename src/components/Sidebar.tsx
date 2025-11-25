@@ -22,7 +22,7 @@ const Sidebar = () => {
     //{ icon: UserCheck, label: "REVIEWERS", path: "/reviewers" },
     { icon: BookOpen, label: "Journals", path: "/journals" },
     { icon: Globe, label: "Conferences", path: "/conferences" },
-    { icon: Mail, label: "Template & Emails", path: "/tempelate-email-setting" },
+    { icon: Mail, label: "Templates & Emails", path: "/tempelate-email-setting" },
 
     { icon: FolderOpen, label: "Topics", path: "topic/topics-page" },
     { icon: File, label: "Tracks,Types ", path: "track-type/track" },
