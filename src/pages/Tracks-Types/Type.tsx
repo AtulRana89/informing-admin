@@ -198,11 +198,7 @@ const Type = () => {
                             )
                           }
                           size={20}
-<<<<<<< HEAD
-                          className="hover:text-blue-800 text-gray-600"
-=======
                           className="text-gray-900 hover:text-blue-800 hover:text-red-600"
->>>>>>> cfe710e6e8146a2cd2806ec68da9f41ea210fac3
                         />
                       </td>
                       {/* <td className="px-4 py-4 bg-transparent text-center border border-gray-300">
