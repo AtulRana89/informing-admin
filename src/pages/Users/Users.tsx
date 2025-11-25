@@ -421,7 +421,7 @@ const Users = () => {
                   <th className="text-left px-4 py-3 font-semibold text-gray-700 border border-gray-300">
                     Registration ▾
                   </th>
-                  <th className="w-16 px-4 py-3 border border-gray-300"></th>
+                  <th className="w-16 px-4 py-3 border border-gray-300  text-gray-700">Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -486,7 +486,7 @@ const Users = () => {
                       <td className="px-4 py-4 border border-gray-300">
                         <div className="flex items-center gap-2 text-gray-600">
                           <Clock size={16} className="text-gray-400" />
-                          <span>
+                          <span className="text-gray-600">
                             {new Date(
                               user.insertDate * 1000
                             ).toLocaleDateString("en-GB", {
@@ -497,13 +497,20 @@ const Users = () => {
                           </span>
                         </div>
                       </td>
-                      <td className="px-4 py-4 text-center border border-gray-300">
+                      {/* <td className="px-4 py-4 text-center border border-gray-300">
                         <button
                           onClick={(e) => handleDeleteUser(user.userId, e)}
                           className=" hover:!border-none text-red-400 bg-transparent hover:text-red-600 transition"
                         >
                           <Trash2 size={20} />
                         </button>
+                      </td> */}
+                      <td className="px-4 py-4 border text-center border-gray-300">
+                        <Trash2
+                          size={20}
+                          className="text-red-400 hover:text-red-600"
+                          onClick={(e) => handleDeleteUser(user.userId, e)}
+                        />
                       </td>
                     </tr>
                   ))

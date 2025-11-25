@@ -1,29 +1,29 @@
-import { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
-import * as z from "zod";
 import {
   Bold,
+  Code,
   Italic,
-  Underline,
   List,
   ListOrdered,
-  Undo,
   Redo,
   Strikethrough,
-  Code,
+  Underline,
+  Undo,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import * as z from "zod";
 import { apiService } from "../../services";
 
 // Import TipTap
+import BulletList from "@tiptap/extension-bullet-list";
+import ListItem from "@tiptap/extension-list-item";
+import OrderedList from "@tiptap/extension-ordered-list";
+import UnderlineExtension from '@tiptap/extension-underline';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import UnderlineExtension from '@tiptap/extension-underline';
 import toast from "react-hot-toast";
-import BulletList from "@tiptap/extension-bullet-list";
-import OrderedList from "@tiptap/extension-ordered-list";
-import ListItem from "@tiptap/extension-list-item";
 // Define the validation schema
 const newJournalSchema = z.object({
   title: z
@@ -38,7 +38,7 @@ const newJournalSchema = z.object({
     .string()
     .min(1, "Overview description is required")
     .min(10, "Overview description must be at least 10 characters"),
-  legacyExternalUrl: z.string().optional(),
+  legacyExternalUrl: z.string().url({ message: "Please enter a valid URL" }).optional().or(z.literal("")),
   callForPapersMessage: z.string().optional(),
   onlineIssn: z.string().optional(),
   printIssn: z.string().optional(),
@@ -53,43 +53,43 @@ const newJournalSchema = z.object({
 type JournalFormData = z.infer<typeof newJournalSchema>;
 
 // TipTap Rich Text Editor Component
-const TipTapEditor = ({ 
-  value, 
-  onChange, 
+const TipTapEditor = ({
+  value,
+  onChange,
   error,
   disabled = false
-}: { 
-  value: string; 
+}: {
+  value: string;
   onChange: (value: string) => void;
   error?: string;
   disabled?: boolean;
 }) => {
-const editor = useEditor({
-  extensions: [
-    StarterKit.configure({
-      bulletList: {
-        keepMarks: true,
-        keepAttributes: true,
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        bulletList: {
+          keepMarks: true,
+          keepAttributes: true,
+        },
+        orderedList: {
+          keepMarks: true,
+          keepAttributes: true,
+        },
+      }),
+      UnderlineExtension,
+      BulletList,
+      OrderedList,
+      ListItem,
+    ],
+    content: value,
+    editable: !disabled,
+    onUpdate: ({ editor }) => onChange(editor.getHTML()),
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm max-w-none focus:outline-none min-h-[16rem] p-3',
       },
-      orderedList: {
-        keepMarks: true,
-        keepAttributes: true,
-      },
-    }),
-    UnderlineExtension,
-    BulletList,
-    OrderedList,
-    ListItem,
-  ],
-  content: value,
-  editable: !disabled,
-  onUpdate: ({ editor }) => onChange(editor.getHTML()),
-  editorProps: {
-    attributes: {
-      class: 'prose prose-sm max-w-none focus:outline-none min-h-[16rem] p-3',
     },
-  },
-});
+  });
 
 
 
@@ -111,16 +111,16 @@ const editor = useEditor({
     return <div className="p-4 text-gray-500">Loading editor...</div>;
   }
 
-  const MenuButton = ({ 
-    onClick, 
-    isActive, 
-    disabled: btnDisabled, 
-    children, 
-    title 
-  }: { 
-    onClick: () => void; 
-    isActive?: boolean; 
-    disabled?: boolean; 
+  const MenuButton = ({
+    onClick,
+    isActive,
+    disabled: btnDisabled,
+    children,
+    title
+  }: {
+    onClick: () => void;
+    isActive?: boolean;
+    disabled?: boolean;
     children: React.ReactNode;
     title?: string;
   }) => (
@@ -152,7 +152,7 @@ const editor = useEditor({
           >
             <Bold className="w-4 h-4" />
           </MenuButton>
-          
+
           <MenuButton
             onClick={() => editor.chain().focus().toggleItalic().run()}
             isActive={editor.isActive('italic')}
@@ -161,7 +161,7 @@ const editor = useEditor({
           >
             <Italic className="w-4 h-4" />
           </MenuButton>
-          
+
           <MenuButton
             onClick={() => editor.chain().focus().toggleUnderline().run()}
             isActive={editor.isActive('underline')}
@@ -170,7 +170,7 @@ const editor = useEditor({
           >
             <Underline className="w-4 h-4" />
           </MenuButton>
-          
+
           <MenuButton
             onClick={() => editor.chain().focus().toggleStrike().run()}
             isActive={editor.isActive('strike')}
@@ -179,7 +179,7 @@ const editor = useEditor({
           >
             <Strikethrough className="w-4 h-4" />
           </MenuButton>
-          
+
           <MenuButton
             onClick={() => editor.chain().focus().toggleCode().run()}
             isActive={editor.isActive('code')}
@@ -190,18 +190,17 @@ const editor = useEditor({
           </MenuButton>
 
           {/* Heading Dropdown */}
-          <select 
-            className={`px-2 py-1 border border-gray-300 bg-white text-sm ${
-              disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-            }`}
+          <select
+            className={`px-2 py-1 border border-gray-300 bg-white text-sm ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+              }`}
             disabled={disabled}
             value={
               editor.isActive('heading', { level: 1 }) ? '1' :
-              editor.isActive('heading', { level: 2 }) ? '2' :
-              editor.isActive('heading', { level: 3 }) ? '3' :
-              editor.isActive('heading', { level: 4 }) ? '4' :
-              editor.isActive('heading', { level: 5 }) ? '5' :
-              editor.isActive('heading', { level: 6 }) ? '6' : '0'
+                editor.isActive('heading', { level: 2 }) ? '2' :
+                  editor.isActive('heading', { level: 3 }) ? '3' :
+                    editor.isActive('heading', { level: 4 }) ? '4' :
+                      editor.isActive('heading', { level: 5 }) ? '5' :
+                        editor.isActive('heading', { level: 6 }) ? '6' : '0'
             }
             onChange={(e) => {
               const level = parseInt(e.target.value);
@@ -232,7 +231,7 @@ const editor = useEditor({
           >
             <List className="w-4 h-4" />
           </MenuButton>
-          
+
           <MenuButton
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
             isActive={editor.isActive('orderedList')}
@@ -272,7 +271,7 @@ const editor = useEditor({
           >
             <Undo className="w-4 h-4" />
           </MenuButton>
-          
+
           <MenuButton
             onClick={() => editor.chain().focus().redo().run()}
             disabled={!editor.can().redo() || disabled}
@@ -301,9 +300,9 @@ const editor = useEditor({
         </div>
 
         {/* Editor Content */}
-        <EditorContent 
-          editor={editor} 
-          className={`min-h-[16rem] text-black bg-white ${disabled ? 'opacity-0' : ''}`} 
+        <EditorContent
+          editor={editor}
+          className={`min-h-[16rem] text-black bg-white ${disabled ? 'opacity-0' : ''}`}
         />
       </div>
       {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
@@ -412,7 +411,7 @@ export default function JournalForm() {
     } catch (err: any) {
       console.error("Error saving journal:", err);
       setApiError(
-        err.response?.data?.message || 
+        err.response?.data?.message ||
         `Failed to ${isEditMode ? "update" : "create"} journal`
       );
     } finally {
@@ -467,11 +466,9 @@ export default function JournalForm() {
               type="text"
               {...register("title")}
               disabled={isLoading}
-              className={`w-full px-3 py-2 border ${
-                errors.title ? "border-red-500" : "border-gray-300"
-              } !bg-[#FAFAFA] focus:outline-none focus:ring-1 ${
-                errors.title ? "focus:ring-red-500" : "focus:ring-blue-500"
-              } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`w-full px-3 py-2 border ${errors.title ? "border-red-500" : "border-gray-300"
+                } !bg-[#FAFAFA] focus:outline-none focus:ring-1 ${errors.title ? "focus:ring-red-500" : "focus:ring-blue-500"
+                } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
             />
             {errors.title && (
               <p className="text-red-600 text-sm mt-1">
@@ -489,11 +486,9 @@ export default function JournalForm() {
               type="text"
               {...register("acronym")}
               disabled={isLoading}
-              className={`w-full px-3 py-2 border ${
-                errors.acronym ? "border-red-500" : "border-gray-300"
-              } !bg-[#FAFAFA] focus:outline-none focus:ring-1 ${
-                errors.acronym ? "focus:ring-red-500" : "focus:ring-blue-500"
-              } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`w-full px-3 py-2 border ${errors.acronym ? "border-red-500" : "border-gray-300"
+                } !bg-[#FAFAFA] focus:outline-none focus:ring-1 ${errors.acronym ? "focus:ring-red-500" : "focus:ring-blue-500"
+                } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
             />
             {errors.acronym && (
               <p className="text-red-600 text-sm mt-1">
@@ -530,10 +525,12 @@ export default function JournalForm() {
               type="text"
               {...register("legacyExternalUrl")}
               disabled={isLoading}
-              className={`w-full px-3 py-2 border border-gray-300 !bg-[#FAFAFA] focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                isLoading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`w-full px-3 py-2 border border-gray-300 !bg-[#FAFAFA] focus:outline-none focus:ring-1 focus:ring-blue-500 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
             />
+            {errors.legacyExternalUrl && (
+              <p className="text-red-500 text-sm mt-1">{errors.legacyExternalUrl.message}</p>
+            )}
           </div>
 
           {/* Call for Papers Message with TipTap Editor */}
@@ -563,9 +560,8 @@ export default function JournalForm() {
               type="text"
               {...register("onlineIssn")}
               disabled={isLoading}
-              className={`w-full px-3 py-2 border border-gray-300 !bg-[#FAFAFA] focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                isLoading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`w-full px-3 py-2 border border-gray-300 !bg-[#FAFAFA] focus:outline-none focus:ring-1 focus:ring-blue-500 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
             />
           </div>
 
@@ -578,9 +574,8 @@ export default function JournalForm() {
               type="text"
               {...register("printIssn")}
               disabled={isLoading}
-              className={`w-full px-3 py-2 border border-gray-300 !bg-[#FAFAFA] focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                isLoading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`w-full px-3 py-2 border border-gray-300 !bg-[#FAFAFA] focus:outline-none focus:ring-1 focus:ring-blue-500 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
             />
           </div>
 
@@ -592,11 +587,9 @@ export default function JournalForm() {
             <select
               {...register("status")}
               disabled={isLoading}
-              className={`w-full px-3 py-2 border ${
-                errors.status ? "border-red-500" : "border-gray-300"
-              } !bg-[#FAFAFA] focus:outline-none focus:ring-1 ${
-                errors.status ? "focus:ring-red-500" : "focus:ring-blue-500"
-              } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+              className={`w-full px-3 py-2 border ${errors.status ? "border-red-500" : "border-gray-300"
+                } !bg-[#FAFAFA] focus:outline-none focus:ring-1 ${errors.status ? "focus:ring-red-500" : "focus:ring-blue-500"
+                } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               <option value="draft">Draft (Keep hidden)</option>
               <option value="published">Published</option>
@@ -620,9 +613,8 @@ export default function JournalForm() {
                   type="text"
                   {...register("minimumTopicsPerArticle")}
                   disabled={isLoading}
-                  className={`w-full px-3 py-2 border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                    isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                  className={`w-full px-3 py-2 border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                 />
               </div>
 
@@ -637,9 +629,8 @@ export default function JournalForm() {
                   type="text"
                   {...register("defaultEditorDueDate")}
                   disabled={isLoading}
-                  className={`w-full px-3 py-2 border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                    isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                  className={`w-full px-3 py-2 border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                 />
               </div>
 
@@ -654,9 +645,8 @@ export default function JournalForm() {
                   type="text"
                   {...register("defaultReviewerDueDate")}
                   disabled={isLoading}
-                  className={`w-full px-3 py-2 border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                    isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                  className={`w-full px-3 py-2 border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                 />
               </div>
             </div>
@@ -670,9 +660,8 @@ export default function JournalForm() {
                   type="text"
                   {...register("defaultTotalReviewers")}
                   disabled={isLoading}
-                  className={`w-full px-3 py-2 border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 ${
-                    isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                  className={`w-full px-3 py-2 border border-gray-300 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                 />
               </div>
             </div>
@@ -698,9 +687,8 @@ export default function JournalForm() {
               type="button"
               onClick={handleFormSubmit}
               disabled={isLoading}
-              className={`!bg-[#3d7ab5] hover:!bg-[#2b5f85] !border-[#2b5f85]  !rounded-none cursor-pointer border !border-x-0 !border-b-4  text-white font-medium px-8 py-2.5 transition ${
-                isLoading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`!bg-[#3d7ab5] hover:!bg-[#2b5f85] !border-[#2b5f85]  !rounded-none cursor-pointer border !border-x-0 !border-b-4  text-white font-medium px-8 py-2.5 transition ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
             >
               {isLoading ? (
                 <span className="flex items-center">
@@ -734,9 +722,8 @@ export default function JournalForm() {
               type="button"
               onClick={handleCancel}
               disabled={isLoading}
-              className={`!bg-gray-200 !rounded-none cursor-pointer !border-gray-300 !border-x-0 !border-b-4 hover:!bg-gray-300 text-gray-700 font-medium px-8 py-2.5 transition ${
-                isLoading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`!bg-gray-200 !rounded-none cursor-pointer !border-gray-300 !border-x-0 !border-b-4 hover:!bg-gray-300 text-gray-700 font-medium px-8 py-2.5 transition ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
             >
               Cancel
             </button>

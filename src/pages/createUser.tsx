@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as z from "zod";
 import { apiService } from "../services";
-import toast from "react-hot-toast";
 
 // Define the validation schema
 const createUserSchema = z
@@ -92,7 +92,7 @@ export default function CreateUser() {
     } catch (error: any) {
       console.error("Error creating user:", error);
       toast.error(
-        error?.response?.data?.message ||
+        error?.response?.data?.data?.message ||
         "Failed to create user. Please try again."
       );
     }

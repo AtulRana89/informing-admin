@@ -2,9 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import * as z from "zod";
 import { apiService } from "../../services";
-import toast from "react-hot-toast";
 
 // Define the validation schema
 const personalInfoSchema = z.object({
@@ -103,7 +103,7 @@ const PersonalInfo = () => {
       }
     } catch (err: any) {
       console.error("Error fetching user profile:", err);
-      setApiError(err.response?.data?.message || "Failed to load user profile");
+      setApiError(err.response?.data?.data?.message || "Failed to load user profile");
     } finally {
       setIsFetching(false);
     }
@@ -170,7 +170,7 @@ const PersonalInfo = () => {
       toast.success("Profile updated successfully!");
     } catch (err: any) {
       console.error("Error updating profile:", err);
-      setApiError(err.response?.data?.message || "Failed to update profile");
+      setApiError(err.response?.data?.data?.message || "Failed to update profile");
     } finally {
       setIsLoading(false);
     }
@@ -222,11 +222,12 @@ const PersonalInfo = () => {
                   isLoading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               >
+
                 <option value=""></option>
                 <option value="Mr">Mr</option>
                 <option value="Ms">Ms</option>
-                <option value="Mrs">Mrs</option>
                 <option value="Dr">Dr</option>
+                <option value="Prof">Prof</option>
               </select>
             </div>
 
@@ -302,9 +303,9 @@ const PersonalInfo = () => {
                 }`}
               >
                 <option value=""></option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
               </select>
             </div>
 
@@ -457,7 +458,7 @@ const PersonalInfo = () => {
                   Primary Telephone Number
                 </label>
                 <input
-                  type="tel"
+                  type="number"
                   {...register("primaryPhone")}
                   onInput={(e: any) => {
                     e.target.value = e.target.value.replace(/\D/g, ""); // REMOVE all non-digits
@@ -474,7 +475,7 @@ const PersonalInfo = () => {
                   Secondary Telephone Number
                 </label>
                 <input
-                  type="tel"
+                  type="number"
                   {...register("secondaryPhone")}
                   onInput={(e: any) => {
                     e.target.value = e.target.value.replace(/\D/g, ""); // REMOVE all non-digits

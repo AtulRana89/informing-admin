@@ -208,8 +208,8 @@ const TopicsPage = () => {
                   <tr>
                     <th className="w-12 px-4 py-3 border border-gray-300"></th>
                     <th className="px-4 py-3 border text-left text-gray-700 border border-gray-300">Topics</th>
-                    <th className="px-4 py-3 border w-20 border-gray-300"></th>
-                    <th className="px-4 py-3 border w-20 border-gray-300"></th>
+                    <th className="px-4 py-3 border w-20 border-gray-300 text-gray-700">Edit</th>
+                    <th className="px-4 py-3 border w-20 border-gray-300 text-gray-700">Delete</th>
                   </tr>
                 </thead>
 
@@ -258,7 +258,7 @@ const TopicsPage = () => {
                           <td className="px-4 py-4 border border-gray-300 text-center">
                             <SquarePen
                               size={20}
-                              className="hover:text-blue-800"
+                              className="text-gray-900 hover:text-blue-800 hover:text-red-600"
                               onClick={() =>
                                 navigate(
                                   `/create-topic?journalId=${journal?.topicId}`

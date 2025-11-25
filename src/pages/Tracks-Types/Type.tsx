@@ -1,26 +1,26 @@
 import { ChevronLeft, ChevronRight, SquarePen, Trash2 } from "lucide-react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { 
-  fetchJournals, 
-  deleteJournal, 
-  setCurrentPage 
-} from "../../store/typeSlice";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  deleteJournal,
+  fetchJournals,
+  setCurrentPage
+} from "../../store/typeSlice";
 
 const Type = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  
-  const { 
-    journals, 
-    totalCount, 
-    currentPage, 
-    itemsPerPage, 
-    isLoading, 
+
+  const {
+    journals,
+    totalCount,
+    currentPage,
+    itemsPerPage,
+    isLoading,
     error,
-    filters 
+    filters
   } = useAppSelector((state) => state.type);
 
   const totalPages = Math.ceil(totalCount / itemsPerPage);
@@ -28,7 +28,7 @@ const Type = () => {
   // Fetch journals when page or filters change
   useEffect(() => {
     const offset = (currentPage - 1) * itemsPerPage;
-    
+
     const params: any = {
       offset,
       limit: itemsPerPage,
@@ -150,13 +150,13 @@ const Type = () => {
                       Types
                     </th>
                     <th className="text-left px-4 py-3 font-semibold text-gray-700 border border-gray-300 w-20">
-                     
+                      Edit
                     </th>
-                    <th className="w-20 px-4 py-3 border border-gray-300"></th>
+                    <th className="w-20 px-4 py-3 border border-gray-300 text-gray-700">Delete</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {journals.map((journal,index) => (
+                  {journals.map((journal, index) => (
                     <tr
                       key={journal.articleId}
                       className="hover:bg-gray-50 cursor-pointer"
@@ -168,7 +168,7 @@ const Type = () => {
                         >
                           <GripVertical size={20} />
                         </button> */}
-                         {(currentPage - 1) * itemsPerPage + (index + 1)}
+                        {(currentPage - 1) * itemsPerPage + (index + 1)}
                       </td>
                       <td className="px-4 py-4 border border-gray-300">
                         <div>
@@ -198,16 +198,27 @@ const Type = () => {
                             )
                           }
                           size={20}
+<<<<<<< HEAD
                           className="hover:text-blue-800 text-gray-600"
+=======
+                          className="text-gray-900 hover:text-blue-800 hover:text-red-600"
+>>>>>>> cfe710e6e8146a2cd2806ec68da9f41ea210fac3
                         />
                       </td>
-                      <td className="px-4 py-4 bg-transparent text-center border border-gray-300">
+                      {/* <td className="px-4 py-4 bg-transparent text-center border border-gray-300">
                         <button
                           onClick={(e) => handleDelete(journal.articleId, e)}
                           className=" hover:!border-none text-red-400 hover:text-red-600 transition"
                         >
                           <Trash2 size={20} />
                         </button>
+                      </td> */}
+                      <td className="px-4 py-4 border border-gray-300 text-center">
+                        <Trash2
+                          size={20}
+                          className="text-red-400 hover:text-red-600"
+                          onClick={(e) => handleDelete(journal.articleId, e)}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -231,11 +242,10 @@ const Type = () => {
                     <button
                       key={index}
                       onClick={() => handlePageChange(page)}
-                      className={`px-4 py-2 rounded ${
-                        currentPage === page
-                          ? "bg-[#4A8BC2] text-white"
-                          : "text-gray-600 hover:bg-gray-100"
-                      }`}
+                      className={`px-4 py-2 rounded ${currentPage === page
+                        ? "bg-[#4A8BC2] text-white"
+                        : "text-gray-600 hover:bg-gray-100"
+                        }`}
                     >
                       {page}
                     </button>

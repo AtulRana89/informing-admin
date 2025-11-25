@@ -1,26 +1,26 @@
-import { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useNavigate } from "react-router-dom";
-import * as z from "zod";
-import toast from "react-hot-toast";
-import {
-  Bold,
-  Italic,
-  Underline,
-  List,
-  ListOrdered,
-  Undo,
-  Redo,
-  Strikethrough,
-  Code,
-} from "lucide-react";
+import BulletList from "@tiptap/extension-bullet-list";
+import ListItem from "@tiptap/extension-list-item";
+import OrderedList from "@tiptap/extension-ordered-list";
+import UnderlineExtension from "@tiptap/extension-underline";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import UnderlineExtension from "@tiptap/extension-underline";
-import BulletList from "@tiptap/extension-bullet-list";
-import OrderedList from "@tiptap/extension-ordered-list";
-import ListItem from "@tiptap/extension-list-item";
+import {
+  Bold,
+  Code,
+  Italic,
+  List,
+  ListOrdered,
+  Redo,
+  Strikethrough,
+  Underline,
+  Undo,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useLocation, useNavigate } from "react-router-dom";
+import * as z from "zod";
 import { apiService } from "../../services";
 
 // ✅ Validation schema
@@ -59,9 +59,8 @@ const TipTapEditor = ({ value, onChange, error }: any) => {
       type="button"
       onClick={onClick}
       title={title}
-      className={`px-2 py-1 hover:bg-gray-200 border  text-gray-600 border-gray-300 !bg-white transition-colors ${
-        isActive ? "!bg-gray-300" : ""
-      }`}
+      className={`px-2 py-1 hover:bg-gray-200 border border-gray-300 !bg-white-300 text-gray-700 transition-colors ${isActive ? "!bg-gray-300" : ""
+        }`}
     >
       {children}
     </button>
@@ -137,14 +136,13 @@ const TipTapEditor = ({ value, onChange, error }: any) => {
           <MenuButton
             onClick={() => editor.chain().focus().redo().run()}
             title="Redo"
-            className="text-red-600"
           >
             <Redo className="w-4 h-4" />
           </MenuButton>
         </div>
 
         {/* Editor content */}
-        <EditorContent editor={editor} className={`min-h-[16rem text-black bg-white `}  />
+        <EditorContent editor={editor} className={`min-h-[16rem text-black bg-white `} />
       </div>
       {error && <p className="text-red-600 text-sm mt-1">{error}</p>}
     </div>
@@ -239,11 +237,9 @@ export default function TrackForm() {
             type="text"
             {...register("name")}
             disabled={loading}
-            className={`w-full px-3 py-2 border !bg-[#FAFAFA] ${
-              errors.name ? "border-red-500" : "border-gray-300"
-            } rounded focus:outline-none focus:ring-1 ${
-              errors.name ? "focus:ring-red-500" : "focus:ring-blue-500"
-            }`}
+            className={`w-full px-3 py-2 border !bg-[#FAFAFA] ${errors.name ? "border-red-500" : "border-gray-300"
+              } rounded focus:outline-none focus:ring-1 ${errors.name ? "focus:ring-red-500" : "focus:ring-blue-500"
+              }`}
           />
           {errors.name && (
             <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>
@@ -281,8 +277,8 @@ export default function TrackForm() {
                 ? "Updating..."
                 : "Saving..."
               : isEditMode
-              ? "Update"
-              : "Save"}
+                ? "Update"
+                : "Save"}
           </button>
 
           <button

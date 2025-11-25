@@ -1,10 +1,10 @@
-import  { useState } from "react";
 import {
-  ChevronRight,
   ChevronDown,
-  ChevronsUp,
+  ChevronRight,
   ChevronsDown,
+  ChevronsUp,
 } from "lucide-react";
+import { useState } from "react";
 
 interface SubOption {
   id: string;
@@ -175,11 +175,11 @@ const Topics = () => {
             options: section.options.map((option) =>
               option.id === optionId
                 ? {
-                    ...option,
-                    expanded: option.hasSubOptions
-                      ? !option.expanded
-                      : option.expanded,
-                  }
+                  ...option,
+                  expanded: option.hasSubOptions
+                    ? !option.expanded
+                    : option.expanded,
+                }
                 : option
             ),
           };
@@ -366,14 +366,14 @@ const Topics = () => {
             <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex flex-col gap-2 ">
               <button
                 onClick={moveUp}
-                className="p-1.5 bg-gray-200 hover:bg-gray-300 rounded-full shadow-sm !bg-white"
+                className="p-1.5 bg-gray-200 hover:bg-gray-300 !bg-white rounded-full shadow-sm"
                 title="Move up"
               >
                 <ChevronsUp className="w-4 h-4 text-gray-700 " />
               </button>
               <button
                 onClick={moveDown}
-                className="p-1.5 bg-gray-200 hover:bg-gray-300 rounded-full shadow-sm !bg-white"
+                className="p-1.5 bg-gray-200 hover:bg-gray-300 !bg-white rounded-full shadow-sm"
                 title="Move down"
               >
                 <ChevronsDown className="w-4 h-4 text-gray-700" />

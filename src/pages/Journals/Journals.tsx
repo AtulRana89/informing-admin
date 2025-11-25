@@ -1,26 +1,26 @@
-import { ChevronLeft, ChevronRight,  Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { 
-  fetchJournals, 
-  deleteJournal, 
-  setCurrentPage 
-} from "../../store/journalSlice";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  deleteJournal,
+  fetchJournals,
+  setCurrentPage
+} from "../../store/journalSlice";
 
 const JournalsPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  
-  const { 
-    journals, 
-    totalCount, 
-    currentPage, 
-    itemsPerPage, 
-    isLoading, 
+
+  const {
+    journals,
+    totalCount,
+    currentPage,
+    itemsPerPage,
+    isLoading,
     error,
-    filters 
+    filters
   } = useAppSelector((state) => state.journals);
 
   const totalPages = Math.ceil(totalCount / itemsPerPage);
@@ -28,7 +28,7 @@ const JournalsPage = () => {
   // Fetch journals when page or filters change
   useEffect(() => {
     const offset = (currentPage - 1) * itemsPerPage;
-    
+
     const params: any = {
       offset,
       limit: itemsPerPage,
@@ -152,11 +152,11 @@ const JournalsPage = () => {
                     <th className="text-left px-4 py-3 font-semibold text-gray-700 border border-gray-300 w-48">
                       Status
                     </th>
-                    <th className="w-20 px-4 py-3 border border-gray-300"></th>
+                    <th className="w-20 px-4 py-3 border border-gray-300 text-gray-700">Delete</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {journals.map((journal,index) => (
+                  {journals.map((journal, index) => (
                     <tr
                       key={journal.journalId}
                       className="hover:bg-gray-50 cursor-pointer"
@@ -168,7 +168,7 @@ const JournalsPage = () => {
                         >
                           <GripVertical size={20} />
                         </button> */}
-                         {(currentPage - 1) * itemsPerPage + (index + 1)}
+                        {(currentPage - 1) * itemsPerPage + (index + 1)}
                       </td>
                       <td className="px-4 py-4 border border-gray-300">
                         <div>
@@ -192,22 +192,28 @@ const JournalsPage = () => {
                       </td>
                       <td className="px-4 py-4 border border-gray-300">
                         <span
-                          className={`text-sm ${
-                            journal.status === "Published All"
-                              ? "text-green-600"
-                              : "text-gray-600"
-                          }`}
+                          className={`text-sm ${journal.status === "Published All"
+                            ? "text-green-600"
+                            : "text-gray-600"
+                            }`}
                         >
                           {journal.status}
                         </span>
                       </td>
-                      <td className="px-4 py-4 bg-transparent text-center border border-gray-300">
+                      {/* <td className="px-4 py-4 bg-transparent text-center border border-gray-300">
                         <button
                           onClick={(e) => handleDelete(journal.journalId, e)}
                           className=" hover:!border-none text-red-400 hover:text-red-600 transition"
                         >
                           <Trash2 size={20} />
                         </button>
+                      </td> */}
+                      <td className="px-4 py-4 border text-center border-gray-300">
+                        <Trash2
+                          size={20}
+                          className="text-red-400 hover:text-red-600"
+                          onClick={(e) => handleDelete(journal.journalId, e)}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -231,11 +237,10 @@ const JournalsPage = () => {
                     <button
                       key={index}
                       onClick={() => handlePageChange(page)}
-                      className={`px-4 py-2 rounded ${
-                        currentPage === page
-                          ? "bg-[#4A8BC2] text-white"
-                          : "text-gray-600 hover:bg-gray-100"
-                      }`}
+                      className={`px-4 py-2 rounded ${currentPage === page
+                        ? "bg-[#4A8BC2] text-white"
+                        : "text-gray-600 hover:bg-gray-100"
+                        }`}
                     >
                       {page}
                     </button>
