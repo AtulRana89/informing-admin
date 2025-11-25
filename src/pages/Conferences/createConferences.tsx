@@ -349,7 +349,7 @@ export default function ConferenceForm() {
     } catch (error: any) {
       console.error("Error saving conference:", error);
       toast.error(
-        error?.response?.data?.message ||
+        error?.response?.data?.data?.message ||
         "Failed to save conference. Please try again."
       );
     }

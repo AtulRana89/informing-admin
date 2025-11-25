@@ -411,7 +411,7 @@ export default function JournalForm() {
     } catch (err: any) {
       console.error("Error saving journal:", err);
       setApiError(
-        err.response?.data?.message ||
+        err?.response?.data?.data?.message ||
         `Failed to ${isEditMode ? "update" : "create"} journal`
       );
     } finally {

@@ -79,7 +79,7 @@ export default function TypeForm() {
       }
       navigate(-1);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || "Failed to save");
+      toast.error(error?.response?.data?.data?.message || "Failed to save");
     } finally {
       setLoading(false);
     }
