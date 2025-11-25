@@ -213,11 +213,12 @@ const PersonalInfo = () => {
                 className={`w-full bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
                   }`}
               >
+
                 <option value=""></option>
                 <option value="Mr">Mr</option>
                 <option value="Ms">Ms</option>
-                <option value="Mrs">Mrs</option>
                 <option value="Dr">Dr</option>
+                <option value="Prof">Prof</option>
               </select>
             </div>
 
