@@ -98,7 +98,7 @@ const PersonalInfo = () => {
       }
     } catch (err: any) {
       console.error("Error fetching user profile:", err);
-      setApiError(err.response?.data?.message || "Failed to load user profile");
+      setApiError(err.response?.data?.data?.message || "Failed to load user profile");
     } finally {
       setIsFetching(false);
     }
@@ -162,7 +162,7 @@ const PersonalInfo = () => {
       toast.success("Profile updated successfully!");
     } catch (err: any) {
       console.error("Error updating profile:", err);
-      setApiError(err.response?.data?.message || "Failed to update profile");
+      setApiError(err.response?.data?.data?.message || "Failed to update profile");
     } finally {
       setIsLoading(false);
     }
