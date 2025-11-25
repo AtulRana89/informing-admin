@@ -120,7 +120,7 @@ const ChangePassword = ({ setModel }: { setModel: (val: boolean) => void }) => {
                     <button
                         type="submit"
                         disabled={isSubmitting || isLoading}
-                        className="!bg-[#FF4D7D] cursor-pointer border border-red-600 border-x-0 border-b-4 hover:!bg-[#FF3366] text-white font-medium px-8 py-2.5 transition"
+                        className="!bg-[#5a9bd2] cursor-pointer border border-red-600 border-x-0 border-b-4 hover:!bg-blue-700 text-white font-medium px-8 py-2.5 transition"
                     >
                         {isSubmitting || isLoading ? "Saving..." : "Change Password"}
                     </button>
