@@ -1,11 +1,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 //import { X } from "lucide-react";
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 import { apiService } from "../../services";
-import toast from "react-hot-toast";
 
 
 
@@ -89,9 +89,11 @@ const Notepad = () => {
 
       {/* Content */}
       <form onSubmit={handleSubmit(onSubmit)} className="w-full p-6 flex flex-col items-center justify-center">
-        <div className=" p-6 w-[40vw] text-gray-600 text-center">
+        <div className=" p-6 w-[40vw] text-gray-600">
+          <label className="block text-gray-700 font-semibold mb-2">
+            Add Note
+          </label>
 
-          Add Note
           <textarea
             className="w-full bg-[#FAFAFA] h-32 p-3 border border-gray-300 rounded focus:!outline-none focus:!ring-0 focus:!border-gray-400 "
             placeholder="Write something..."
