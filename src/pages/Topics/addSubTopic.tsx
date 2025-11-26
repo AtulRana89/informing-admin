@@ -19,28 +19,30 @@ interface TopicListResponse {
 }
 
 // ✅ Validation schema
-const schema = z.object({
-  topicId: z.string().min(1, "Topic is required"),
-  name: z
-    .string()
-    .min(1, "Name is required")
-    .min(3, "Name must be at least 3 characters"),
-  minSelections: z
-    .string()
-    .min(1, "Min Selection is required")
-    .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
-      message: "Min Selection must be a valid number",
-    }),
-  maxSelections: z
-    .string()
-    .min(1, "Max Selection is required")
-    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: "Max Selection must be a valid positive number",
-    }),
-}).refine((data) => Number(data.maxSelections) >= Number(data.minSelections), {
-  message: "Max Selection must be greater than or equal to Min Selection",
-  path: ["max"],
-});
+const schema = z
+  .object({
+    topicId: z.string().min(1, "Topic is required"),
+    name: z
+      .string()
+      .min(1, "Name is required")
+      .min(3, "Name must be at least 3 characters"),
+    minSelections: z
+      .string()
+      .min(1, "Min Selection is required")
+      .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
+        message: "Min Selection must be a valid number",
+      }),
+    maxSelections: z
+      .string()
+      .min(1, "Max Selection is required")
+      .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+        message: "Max Selection must be a valid positive number",
+      }),
+  })
+  .refine((data) => Number(data.maxSelections) >= Number(data.minSelections), {
+    message: "Max Selection must be greater than or equal to Min Selection",
+    path: ["max"],
+  });
 
 type FormData = z.infer<typeof schema>;
 
@@ -106,12 +108,12 @@ export default function SubTopicForm() {
           const responser = await apiService.get("/topic/sub/list", {
             params: { subTopicId: id },
           });
-          console.log("ddddd",responser,responser?.data?.list[0])
-          const response = responser?.data?.list[0]
+          console.log("ddddd", responser, responser?.data?.list[0]);
+          const response = responser?.data?.list[0];
 
           if (response) {
-            if (response.subTopicId) {
-              setValue("topicId", response.subTopicId.toString());
+            if (response.topicId) {
+              setValue("topicId", response.topicId.toString());
             }
             if (response.name) {
               setValue("name", response.name);
@@ -124,9 +126,7 @@ export default function SubTopicForm() {
             }
           }
         } catch (error: any) {
-          toast.error(
-            error.response?.message || "Failed to load sub topic"
-          );
+          toast.error(error.response?.message || "Failed to load sub topic");
         } finally {
           setLoading(false);
         }
@@ -139,7 +139,7 @@ export default function SubTopicForm() {
   const onSubmit = async (data: FormData) => {
     try {
       setLoading(true);
-      
+
       const payload = {
         topicId: data.topicId,
         name: data.name,
@@ -180,6 +180,10 @@ export default function SubTopicForm() {
           <select
             {...register("topicId")}
             disabled={loading || loadingTopics}
+            onChange={(e) => {
+              const selected = e.target.value;
+              setValue("topicId", selected); // 👈 Set topicId manually
+            }}
             className={`w-full px-3 py-2 border !bg-[#FAFAFA] ${
               errors.topicId ? "border-red-500" : "border-gray-300"
             } rounded focus:outline-none focus:ring-1 ${
@@ -237,7 +241,9 @@ export default function SubTopicForm() {
                 className={`w-full px-3 py-2 border !bg-[#FAFAFA] ${
                   errors.minSelections ? "border-red-500" : "border-gray-300"
                 } rounded focus:outline-none focus:ring-1 ${
-                  errors.minSelections ? "focus:ring-red-500" : "focus:ring-blue-500"
+                  errors.minSelections
+                    ? "focus:ring-red-500"
+                    : "focus:ring-blue-500"
                 }`}
                 placeholder="Enter min"
               />
@@ -258,7 +264,9 @@ export default function SubTopicForm() {
                 className={`w-full px-3 py-2 border !bg-[#FAFAFA] ${
                   errors.maxSelections ? "border-red-500" : "border-gray-300"
                 } rounded focus:outline-none focus:ring-1 ${
-                  errors.maxSelections ? "focus:ring-red-500" : "focus:ring-blue-500"
+                  errors.maxSelections
+                    ? "focus:ring-red-500"
+                    : "focus:ring-blue-500"
                 }`}
                 placeholder="Enter max"
               />
