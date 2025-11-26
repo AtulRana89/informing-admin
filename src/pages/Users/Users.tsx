@@ -209,7 +209,7 @@ const Users = () => {
           key={1}
           onClick={() => handlePageChange(1)}
           className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${currentPage === 1
-            ? "bg-[#4A8BC2] text-white"
+            ? "!bg-[#4A8BC2] text-white"
             : "text-gray-600 hover:bg-gray-100"
             }`}
         >
