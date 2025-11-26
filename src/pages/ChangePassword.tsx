@@ -20,8 +20,6 @@ const changePasswordSchema = z
 type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
 const ChangePassword = ({ setModel }: { setModel: (val: boolean) => void }) => {
-    const params = new URLSearchParams(location.search);
-    const userId = params.get("id");
 
     const [isLoading, setIsLoading] = useState(false);
 
