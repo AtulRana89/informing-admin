@@ -147,7 +147,8 @@ export default function TopicForm() {
                 Min Selection <span className="text-red-600">*</span>
               </label>
               <input
-                type="text"
+                type="number"
+                min={0}
                 {...register("minSelections")}
                 disabled={loading}
                 className={`w-full px-3 py-2 border !bg-[#FAFAFA] ${
@@ -168,7 +169,9 @@ export default function TopicForm() {
                 Max Selection <span className="text-red-600">*</span>
               </label>
               <input
-                type="text"
+               type="number"
+                min={0}
+                
                 {...register("maxSelections")}
                 disabled={loading}
                 className={`w-full px-3 py-2 border !bg-[#FAFAFA] ${
