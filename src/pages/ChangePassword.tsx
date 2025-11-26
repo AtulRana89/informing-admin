@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
-import  { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 import { apiService } from "../services";
-import toast from "react-hot-toast";
 
 const changePasswordSchema = z
     .object({
@@ -39,10 +39,6 @@ const ChangePassword = ({ setModel }: { setModel: (val: boolean) => void }) => {
     });
 
     const onSubmit = async (data: ChangePasswordFormData) => {
-        if (!userId) {
-            toast.error("User ID is required");
-            return;
-        }
         setIsLoading(true);
         try {
             let payload = {
