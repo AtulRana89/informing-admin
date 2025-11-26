@@ -58,7 +58,7 @@ const Login: React.FC = () => {
       if (error.response) {
         const status = error.response.status;
         const message =
-          error.response.data.data?.message || error.response.data?.error;
+          error.response.data.data?.message || error.response.data.data?.error;
 
         if (status === 401) setApiError("Invalid email or password");
         else if (status === 403)
