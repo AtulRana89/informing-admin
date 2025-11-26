@@ -89,7 +89,7 @@ const Notepad = () => {
 
       {/* Content */}
       <form onSubmit={handleSubmit(onSubmit)} className="w-full p-6 flex flex-col items-center justify-center">
-        <div className=" p-6 w-[40vw] text-gray-600">
+        <div className=" p-6 w-[40vw] text-gray-600 text-center">
           <label className="block text-gray-700 font-semibold mb-2">
             Add Note
           </label>
