@@ -75,7 +75,7 @@ const Notepad = () => {
   };
 
   return (
-    <div className="w-full mx-auto bg-white  ">
+    <div className="w-full mx-auto bg-white flex items-center justify-center ">
       {/* Header */}
       <div className="flex items-center justify-between p-4 ">
         {/* <h2 className="text-2xl text-gray-700 font-normal">Notepad</h2> */}
@@ -88,8 +88,8 @@ const Notepad = () => {
       </div>
 
       {/* Content */}
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full p-6 flex flex-col  justify-center">
-        <div className=" p-6 w-[40vw]">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full p-6 flex flex-col items-center justify-center">
+        <div className=" p-6 w-[40vw] text-gray-600 text-center">
 
           Add Note
           <textarea
