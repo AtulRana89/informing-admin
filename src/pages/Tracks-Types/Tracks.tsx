@@ -161,7 +161,7 @@ const Tracks = () => {
                       key={journal.trackId}
                       className="hover:bg-gray-50 cursor-pointer"
                     >
-                      <td className="px-4 py-4 border border-gray-300 text-center">
+                      <td className="px-4 py-4 border border-gray-300 text-center text-gray-600">
                         {/* <button
                           className="text-gray-400 hover:text-gray-600 cursor-move !bg-gray-100"
                           onClick={(e) => e.stopPropagation()}
