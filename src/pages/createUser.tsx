@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import * as z from "zod";
 import { apiService } from "../services";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 // Define the validation schema
 const createUserSchema = z
@@ -51,6 +53,8 @@ export default function CreateUser() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const role = queryParams.get("role") || "user";
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   const {
     register,
@@ -93,7 +97,7 @@ export default function CreateUser() {
       console.error("Error creating user:", error);
       toast.error(
         error?.response?.data?.data?.message ||
-        "Failed to create user. Please try again."
+          "Failed to create user. Please try again."
       );
     }
   };
@@ -127,9 +131,11 @@ export default function CreateUser() {
               <input
                 type="text"
                 {...register("personalName")}
-                className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${errors.personalName ? "border-red-500" : "border-gray-300"
-                  } bg-white focus:outline-none focus:ring-1 ${errors.personalName ? "focus:ring-red-500" : ""
-                  }`}
+                className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${
+                  errors.personalName ? "border-red-500" : "border-gray-300"
+                } bg-white focus:outline-none focus:ring-1 ${
+                  errors.personalName ? "focus:ring-red-500" : ""
+                }`}
               />
               {errors.personalName && (
                 <p className="text-red-600 text-sm mt-1">
@@ -157,9 +163,11 @@ export default function CreateUser() {
             <input
               type="text"
               {...register("familyName")}
-              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${errors.familyName ? "border-red-500" : "border-gray-300"
-                } bg-white focus:outline-none focus:ring-1 ${errors.familyName ? "focus:ring-red-500" : ""
-                }`}
+              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${
+                errors.familyName ? "border-red-500" : "border-gray-300"
+              } bg-white focus:outline-none focus:ring-1 ${
+                errors.familyName ? "focus:ring-red-500" : ""
+              }`}
             />
             {errors.familyName && (
               <p className="text-red-600 text-sm mt-1">
@@ -176,9 +184,11 @@ export default function CreateUser() {
             <input
               type="text"
               {...register("city")}
-              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${errors.city ? "border-red-500" : "border-gray-300"
-                } bg-white focus:outline-none focus:ring-1 ${errors.city ? "focus:ring-red-500" : ""
-                }`}
+              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${
+                errors.city ? "border-red-500" : "border-gray-300"
+              } bg-white focus:outline-none focus:ring-1 ${
+                errors.city ? "focus:ring-red-500" : ""
+              }`}
             />
             {errors.city && (
               <p className="text-red-600 text-sm mt-1">{errors.city.message}</p>
@@ -192,9 +202,11 @@ export default function CreateUser() {
             </label>
             <select
               {...register("country")}
-              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${errors.country ? "border-red-500" : "border-gray-300"
-                } bg-white focus:outline-none focus:ring-1 ${errors.country ? "focus:ring-red-500" : ""
-                }`}
+              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${
+                errors.country ? "border-red-500" : "border-gray-300"
+              } bg-white focus:outline-none focus:ring-1 ${
+                errors.country ? "focus:ring-red-500" : ""
+              }`}
             >
               <option value=""></option>
               <option value="US">United States</option>
@@ -218,11 +230,13 @@ export default function CreateUser() {
             <input
               type="text"
               {...register("affiliationUniversity")}
-              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${errors.affiliationUniversity
-                ? "border-red-500"
-                : "border-gray-300"
-                } bg-white focus:outline-none focus:ring-1 ${errors.affiliationUniversity ? "focus:ring-red-500" : ""
-                }`}
+              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${
+                errors.affiliationUniversity
+                  ? "border-red-500"
+                  : "border-gray-300"
+              } bg-white focus:outline-none focus:ring-1 ${
+                errors.affiliationUniversity ? "focus:ring-red-500" : ""
+              }`}
             />
             {errors.affiliationUniversity && (
               <p className="text-red-600 text-sm mt-1">
@@ -239,9 +253,11 @@ export default function CreateUser() {
             <input
               type="text"
               {...register("department")}
-              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${errors.department ? "border-red-500" : "border-gray-300"
-                } bg-white focus:outline-none focus:ring-1 ${errors.department ? "focus:ring-red-500" : ""
-                }`}
+              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${
+                errors.department ? "border-red-500" : "border-gray-300"
+              } bg-white focus:outline-none focus:ring-1 ${
+                errors.department ? "focus:ring-red-500" : ""
+              }`}
             />
             {errors.department && (
               <p className="text-red-600 text-sm mt-1">
@@ -258,9 +274,11 @@ export default function CreateUser() {
             <input
               type="email"
               {...register("email")}
-              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${errors.email ? "border-red-500" : "border-gray-300"
-                } bg-blue-50 focus:outline-none focus:ring-1 ${errors.email ? "focus:ring-red-500" : ""
-                }`}
+              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${
+                errors.email ? "border-red-500" : "border-gray-300"
+              } bg-blue-50 focus:outline-none focus:ring-1 ${
+                errors.email ? "focus:ring-red-500" : ""
+              }`}
             />
             {errors.email && (
               <p className="text-red-600 text-sm mt-1">
@@ -270,18 +288,33 @@ export default function CreateUser() {
           </div>
 
           {/* Set your Password */}
+          {/* Password */}
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">
               Set your Password <span className="text-red-600">*</span>
             </label>
-            <input
-              type="password"
-              {...register("password")}
-              placeholder="••••••"
-              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${errors.password ? "border-red-500" : "border-gray-300"
-                } bg-blue-50 focus:outline-none focus:ring-1 ${errors.password ? "focus:ring-red-500" : ""
+
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                {...register("password")}
+                placeholder="••••••"
+                className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${
+                  errors.password ? "border-red-500" : "border-gray-300"
+                } focus:outline-none focus:ring-1 ${
+                  errors.password ? "focus:ring-red-500" : ""
                 }`}
-            />
+              />
+
+              {/* Eye icon */}
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-2.5 text-gray-600 cursor-pointer"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </span>
+            </div>
+
             {errors.password && (
               <p className="text-red-600 text-sm mt-1">
                 {errors.password.message}
@@ -294,13 +327,28 @@ export default function CreateUser() {
             <label className="block text-sm font-bold text-gray-700 mb-2">
               Repeat Password <span className="text-red-600">*</span>
             </label>
-            <input
-              type="password"
-              {...register("repeatPassword")}
-              className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${errors.repeatPassword ? "border-red-500" : "border-gray-300"
-                } bg-white focus:outline-none focus:ring-1 ${errors.repeatPassword ? "focus:ring-red-500" : ""
+
+            <div className="relative">
+              <input
+                type={showRepeatPassword ? "text" : "password"}
+                {...register("repeatPassword")}
+                placeholder="••••••"
+                className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${
+                  errors.repeatPassword ? "border-red-500" : "border-gray-300"
+                } focus:outline-none focus:ring-1 ${
+                  errors.repeatPassword ? "focus:ring-red-500" : ""
                 }`}
-            />
+              />
+
+              {/* Eye icon */}
+              <span
+                onClick={() => setShowRepeatPassword(!showRepeatPassword)}
+                className="absolute right-3 top-2.5 text-gray-600 cursor-pointer"
+              >
+                {showRepeatPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </span>
+            </div>
+
             {errors.repeatPassword && (
               <p className="text-red-600 text-sm mt-1">
                 {errors.repeatPassword.message}

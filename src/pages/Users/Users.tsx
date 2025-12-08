@@ -392,7 +392,7 @@ const Users = () => {
               <MultiSelectCheckbox
                 options={typeOptions}
                 value={selectedTypes}
-                onChange={handleTypeChange}
+                onChange={handleType}
                 placeholder="All Types"
                 disabled={false}
                 isLoading={isLoading}
