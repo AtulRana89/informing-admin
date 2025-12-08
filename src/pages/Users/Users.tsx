@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight, Clock, Trash2, User } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
@@ -16,11 +16,46 @@ import {
   toggleUserSelection,
 } from "../../store/userSlice";
 import { apiService } from "../../services";
+import MultiSelectCheckbox, { Option } from "../../components/multi-select";
+
+const typeOptions: Option[] = [
+  { value: "", label: "All Type" },
+  { value: "reviewer", label: "Reviewer" },
+  { value: "editor", label: "Editor" },
+  { value: "Publisher", label: "Publisher" },
+  { value: "Author", label: "Author" },
+  { value: "UnverifiedAuthor", label: "Unverified Article Author" },
+  { value: "NoActiveEmails", label: "Reviewer/Editor With No Active Emails" },
+
+  { value: "", label: "", isDivider: true },
+
+  { value: "gackowski_award_winner", label: "Gackowski Award Winner" },
+  { value: "second_act", label: "Second Act" },
+  { value: "ambassador", label: "Ambassador" },
+  { value: "director", label: "Director" },
+  { value: "honorary_fellow", label: "Honorary Fellow" },
+  { value: "fellow", label: "Fellow" },
+  { value: "governor", label: "Governor" },
+  { value: "executive_director", label: "Executive Director" },
+
+  { value: "", label: "", isDivider: true },
+
+  { value: "isi_founder", label: "Founder" },
+  { value: "alumni", label: "Alumni" },
+  { value: "Member", label: "Member" },
+  { value: "LapsedMember", label: "Lapsed Member" },
+  { value: "landing_page", label: "Featured" },
+  { value: "HasTestimonial", label: "Has Testimonial" },
+  { value: "in_watchList", label: "In Watchlist" },
+  { value: "presented_paper", label: "Presented Paper at InSITE" },
+  { value: "best_paper", label: "Best Paper for InSITE" },
+];
 
 const Users = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
   const {
     users,
@@ -64,7 +99,11 @@ const Users = () => {
     }
 
     if (filters.activeTab && filters.activeTab !== "User") {
-      params.role = filters.activeTab.toLowerCase();
+      if (filters.activeTab == "Duplicate") {
+        params.role = "isDuplicate";
+      } else {
+        params.role = filters.activeTab.toLowerCase();
+      }
     }
     if (filters.type) {
       params.isiPosition = filters.type;
@@ -89,7 +128,6 @@ const Users = () => {
   };
 
   const handleSelectUser = async (userId: string) => {
-   
     const isCurrentlySelected = selectedUsers.includes(userId);
 
     // Update local state (toggle user)
@@ -109,10 +147,10 @@ const Users = () => {
     try {
       await apiService.put("/user/update", payload);
       console.log("API updated:", payload);
-       dispatch(toggleUserSelection(userId));
-       toast.success("user updated succesfully")
-    } catch (error:any) {
-      toast.error(error?.response?.data?.data?.message)
+      dispatch(toggleUserSelection(userId));
+      toast.success("user updated succesfully");
+    } catch (error: any) {
+      toast.error(error?.response?.data?.data?.message);
       console.error("Error updating:", error);
     }
   };
@@ -307,8 +345,14 @@ const Users = () => {
 
     return buttons;
   };
-  const handleType = (value: string) => {
-    dispatch(setSearchType(value));
+  const handleType = (values: string[]) => {
+    dispatch(setSearchType(values));
+  };
+
+  const handleTypeChange = (selected: string[]) => {
+    setSelectedTypes(selected);
+    // Your handleType function logic here
+    console.log("Selected types:", selected);
   };
 
   return (
@@ -343,53 +387,18 @@ const Users = () => {
             ))}
           </div>
 
-          <div className="flex gap-3 py-2">
-            <div className="flex items-center gap-3">
-              <select
-                disabled={isLoading}
-                onChange={(e) => handleType(e.target.value)}
-                className={`bg-[#FAFAFA] text-[14px] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                <option value="">All Type</option>
-                <option value="reviewer">Reviewer</option>
-                <option value="editor">Editor</option>
-                <option value="Publisher">Publisher</option>
-                <option value="Author">Author</option>
-                <option value="UnverifiedAuthor">
-                  Unverified Article Author
-                </option>
-                <option value="NoActiveEmails">
-                  Reviewer/Editor With No Active Emails
-                </option>
-
-                <option value="">---------</option>
-                <option value="gackowski_award_winner">
-                  Gackowski Award Winner
-                </option>
-                <option value="second_act">Second Act</option>
-                <option value="ambassador">Ambassador</option>
-                <option value="director">Director</option>
-                <option value="honorary_fellow">Honorary Fellow</option>
-                <option value="fellow">Fellow</option>
-                <option value="governor">Governor</option>
-                <option value="executive_director">Executive Director</option>
-                <option value="">---------</option>
-
-                <option value="isi_founder">Founder</option>
-                <option value="alumni">Alumni</option>
-                <option value="Member">Member</option>
-                <option value="LapsedMember">Lapsed Member</option>
-                <option value="landing_page">Featured</option>
-                <option value="HasTestimonial">Has Testimonial</option>
-                <option value="in_watchList">In Watchlist</option>
-                <option value="presented_paper">
-                  Presented Paper at InSITE
-                </option>
-                <option value="best_paper">Best Paper for InSITE</option>
-              </select>
+          <div className="flex gap-3 ">
+            <div className="flex items-center ">
+              <MultiSelectCheckbox
+                options={typeOptions}
+                value={selectedTypes}
+                onChange={handleTypeChange}
+                placeholder="All Types"
+                disabled={false}
+                isLoading={isLoading}
+              />
             </div>
+
             <div className="flex items-center gap-3">
               <select
                 disabled={isLoading}
@@ -502,11 +511,13 @@ const Users = () => {
 
                         <input
                           type="checkbox"
-                          checked={selectedUsers.includes(user.userId) || user.isDuplicate}
+                          checked={
+                            selectedUsers.includes(user.userId) ||
+                            user.isDuplicate
+                          }
                           onChange={() => handleSelectUser(user.userId)}
                           className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                         />
-
                       </td>
                       <td className="px-4 py-4 border border-gray-300">
                         <div className="flex items-center gap-3">

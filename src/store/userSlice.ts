@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { apiService } from '../services';
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { apiService } from "../services";
 
 interface UserData {
   userId: string;
@@ -42,7 +42,7 @@ interface UserState {
     activeTab: string | null;
     typeFilter: string;
     searchQuery: string;
-    type: string;
+    type: string[];
   };
 }
 
@@ -56,10 +56,10 @@ const initialState: UserState = {
   error: null,
   selectedUsers: [],
   filters: {
-    activeTab: 'User',
-    typeFilter: 'All Types',
-    searchQuery: '',
-    type: '',
+    activeTab: "User",
+    typeFilter: "All Types", // single string for UI label
+    searchQuery: "",
+    type: [] as string[], // array for API filtering
   },
 };
 
@@ -68,54 +68,49 @@ export const fetchUsers = createAsyncThunk<
   { users: UserData[]; totalCount: number },
   FetchUsersParams,
   { rejectValue: string }
->(
-  'users/fetchUsers',
-  async (params, { rejectWithValue }) => {
-    try {
-      const response = await apiService.get<UserListResponse>('/user/list', { params });
+>("users/fetchUsers", async (params, { rejectWithValue }) => {
+  try {
+    const response = await apiService.get<UserListResponse>("/user/list", {
+      params,
+    });
 
-      // Handle different response structures
-      const data = response.data || response;
-      const userList = data?.list || (data as any).data || [];
-      const total = data?.totalCount || (data as any).totalCount || 0;
+    // Handle different response structures
+    const data = response.data || response;
+    const userList = data?.list || (data as any).data || [];
+    const total = data?.totalCount || (data as any).totalCount || 0;
 
-      return {
-        users: userList,
-        totalCount: total,
-      };
-    } catch (err: any) {
-      if (err?.response?.status === 404) {
-        return { users: [], totalCount: 0 };
-      }
-      return rejectWithValue(
-        err.response?.data?.message || 'Failed to load users'
-      );
+    return {
+      users: userList,
+      totalCount: total,
+    };
+  } catch (err: any) {
+    if (err?.response?.status === 404) {
+      return { users: [], totalCount: 0 };
     }
+    return rejectWithValue(
+      err.response?.data?.message || "Failed to load users"
+    );
   }
-);
+});
 
 // Async thunk for deleting a user
 export const deleteUser = createAsyncThunk<
   string,
   string,
   { rejectValue: string }
->(
-  'users/deleteUser',
-  async (userId, { rejectWithValue }) => {
-    try {
-      await apiService.delete(`/user/${userId}`);
-      return userId;
-    } catch (err: any) {
-      return rejectWithValue(
-        err.response?.data?.message || 'Failed to delete user'
-      );
-    }
+>("users/deleteUser", async (userId, { rejectWithValue }) => {
+  try {
+    await apiService.delete(`/user/${userId}`);
+    return userId;
+  } catch (err: any) {
+    return rejectWithValue(
+      err.response?.data?.message || "Failed to delete user"
+    );
   }
-);
-
+});
 
 const userSlice = createSlice({
-  name: 'users',
+  name: "users",
   initialState,
   reducers: {
     setCurrentPage: (state, action: PayloadAction<number>) => {
@@ -133,23 +128,27 @@ const userSlice = createSlice({
       state.filters.searchQuery = action.payload;
       state.currentPage = 1;
     },
-    setSearchType: (state, action: PayloadAction<string>) => {
-      state.filters.type = action.payload;
+    setSearchType: (state, action: PayloadAction<string[]>) => {
+      state.filters.type = action.payload; // array for API
+      state.filters.typeFilter = action.payload.length // for UI display
+        ? action.payload.join(", ")
+        : "All Types"; // default label
       state.currentPage = 1;
     },
+
     setSelectedUsers: (state, action: PayloadAction<string[]>) => {
       state.selectedUsers = action.payload;
     },
     toggleUserSelection: (state, action: PayloadAction<string>) => {
       const userId = action.payload;
       if (state.selectedUsers.includes(userId)) {
-        state.selectedUsers = state.selectedUsers.filter(id => id !== userId);
+        state.selectedUsers = state.selectedUsers.filter((id) => id !== userId);
       } else {
         state.selectedUsers.push(userId);
       }
     },
     selectAllUsers: (state) => {
-      state.selectedUsers = state.users.map(user => user.userId);
+      state.selectedUsers = state.users.map((user) => user.userId);
     },
     deselectAllUsers: (state) => {
       state.selectedUsers = [];
@@ -174,7 +173,7 @@ const userSlice = createSlice({
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload || 'An error occurred';
+        state.error = action.payload || "An error occurred";
         state.users = [];
         state.totalCount = 0;
         state.totalPages = 0;
@@ -192,12 +191,12 @@ const userSlice = createSlice({
         state.totalPages = Math.ceil(state.totalCount / state.limit);
         // Remove from selected users if present
         state.selectedUsers = state.selectedUsers.filter(
-          id => id !== action.payload
+          (id) => id !== action.payload
         );
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload || 'Failed to delete user';
+        state.error = action.payload || "Failed to delete user";
       });
   },
 });
