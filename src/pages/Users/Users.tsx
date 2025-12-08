@@ -132,6 +132,7 @@ const Users = () => {
 
     // Update local state (toggle user)
     let updated;
+
     if (isCurrentlySelected) {
       updated = selectedUsers.filter((id) => id !== userId);
     } else {
@@ -349,11 +350,11 @@ const Users = () => {
     dispatch(setSearchType(values));
   };
 
-  const handleTypeChange = (selected: string[]) => {
-    setSelectedTypes(selected);
-    // Your handleType function logic here
-    console.log("Selected types:", selected);
-  };
+  // const handleTypeChange = (selected: string[]) => {
+  //   setSelectedTypes(selected);
+  //   // Your handleType function logic here
+  //   console.log("Selected types:", selected);
+  // };
 
   return (
     <div className="bg-[#fff] min-h-screen">
