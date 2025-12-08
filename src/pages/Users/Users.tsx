@@ -15,6 +15,7 @@ import {
   setSearchType,
   toggleUserSelection,
 } from "../../store/userSlice";
+import { apiService } from "../../services";
 
 const Users = () => {
   const dispatch = useAppDispatch();
@@ -36,7 +37,6 @@ const Users = () => {
 
   const queryParams = new URLSearchParams(location.search);
   const role = queryParams.get("role");
-
 
   useEffect(() => {
     dispatch(fetchCombineJournals());
@@ -70,7 +70,15 @@ const Users = () => {
       params.isiPosition = filters.type;
     }
     dispatch(fetchUsers(params));
-  }, [currentPage, filters.searchQuery, filters.activeTab, filters.type, limit, dispatch]);
+  }, [
+    currentPage,
+    selectedUsers,
+    filters.searchQuery,
+    filters.activeTab,
+    filters.type,
+    limit,
+    dispatch,
+  ]);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -80,8 +88,33 @@ const Users = () => {
     }
   };
 
-  const handleSelectUser = (userId: string) => {
-    dispatch(toggleUserSelection(userId));
+  const handleSelectUser = async (userId: string) => {
+   
+    const isCurrentlySelected = selectedUsers.includes(userId);
+
+    // Update local state (toggle user)
+    let updated;
+    if (isCurrentlySelected) {
+      updated = selectedUsers.filter((id) => id !== userId);
+    } else {
+      updated = [...selectedUsers, userId];
+    }
+
+    // API payload
+    const payload = {
+      userId,
+      isDuplicate: !isCurrentlySelected, // true if checked, false if unchecked
+    };
+
+    try {
+      await apiService.put("/user/update", payload);
+      console.log("API updated:", payload);
+       dispatch(toggleUserSelection(userId));
+       toast.success("user updated succesfully")
+    } catch (error:any) {
+      toast.error(error?.response?.data?.data?.message)
+      console.error("Error updating:", error);
+    }
   };
 
   const handlePageChange = (page: number) => {
@@ -193,10 +226,11 @@ const Users = () => {
           <button
             key={i}
             onClick={() => handlePageChange(i)}
-            className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${currentPage === i
-              ? "!bg-[#4A8BC2] !text-white"
-              : "text-gray-600 hover:bg-gray-100"
-              }`}
+            className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${
+              currentPage === i
+                ? "!bg-[#4A8BC2] !text-white"
+                : "text-gray-600 hover:bg-gray-100"
+            }`}
           >
             {i}
           </button>
@@ -208,10 +242,11 @@ const Users = () => {
         <button
           key={1}
           onClick={() => handlePageChange(1)}
-          className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${currentPage === 1
-            ? "!bg-[#4A8BC2] !text-white"
-            : "!text-gray-600 hover:bg-gray-100"
-            }`}
+          className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${
+            currentPage === 1
+              ? "!bg-[#4A8BC2] !text-white"
+              : "!text-gray-600 hover:bg-gray-100"
+          }`}
         >
           1
         </button>
@@ -235,10 +270,11 @@ const Users = () => {
           <button
             key={i}
             onClick={() => handlePageChange(i)}
-            className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${currentPage === i
-              ? "bg-[#4A8BC2] text-white"
-              : "text-gray-600 hover:bg-gray-100"
-              }`}
+            className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${
+              currentPage === i
+                ? "bg-[#4A8BC2] text-white"
+                : "text-gray-600 hover:bg-gray-100"
+            }`}
           >
             {i}
           </button>
@@ -258,10 +294,11 @@ const Users = () => {
         <button
           key={totalPages}
           onClick={() => handlePageChange(totalPages)}
-          className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${currentPage === totalPages
-            ? "bg-[#4A8BC2] text-white"
-            : "text-gray-600 hover:bg-gray-100"
-            }`}
+          className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${
+            currentPage === totalPages
+              ? "bg-[#4A8BC2] text-white"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
         >
           {totalPages}
         </button>
@@ -289,16 +326,17 @@ const Users = () => {
             + Add New
           </div>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-3">
           <div className="flex gap-3 py-2">
             {["User", "Eic", "Admin", "Duplicate"].map((tab) => (
               <div
                 key={tab}
                 onClick={() => onTabClick(tab)}
-                className={`px-2 py-2 rounded-xl cursor-pointer ${filters.activeTab == tab
-                  ? "!bg-[#568fce] text-white"
-                  : "bg-white text-gray-400 border border-gray-300 hover:border-gray-400"
-                  }`}
+                className={`px-2 py-2 rounded-xl cursor-pointer ${
+                  filters.activeTab == tab
+                    ? "!bg-[#568fce] text-white"
+                    : "bg-white text-gray-400 border border-gray-300 hover:border-gray-400"
+                }`}
               >
                 {tab}
               </div>
@@ -310,19 +348,26 @@ const Users = () => {
               <select
                 disabled={isLoading}
                 onChange={(e) => handleType(e.target.value)}
-                className={`bg-[#FAFAFA] text-[14px] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`bg-[#FAFAFA] text-[14px] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 <option value="">All Type</option>
                 <option value="reviewer">Reviewer</option>
                 <option value="editor">Editor</option>
                 <option value="Publisher">Publisher</option>
                 <option value="Author">Author</option>
-                <option value="UnverifiedAuthor">Unverified Article Author</option>
-                <option value="NoActiveEmails">Reviewer/Editor With No Active Emails</option>
+                <option value="UnverifiedAuthor">
+                  Unverified Article Author
+                </option>
+                <option value="NoActiveEmails">
+                  Reviewer/Editor With No Active Emails
+                </option>
 
                 <option value="">---------</option>
-                <option value="gackowski_award_winner">Gackowski Award Winner</option>
+                <option value="gackowski_award_winner">
+                  Gackowski Award Winner
+                </option>
                 <option value="second_act">Second Act</option>
                 <option value="ambassador">Ambassador</option>
                 <option value="director">Director</option>
@@ -339,15 +384,18 @@ const Users = () => {
                 <option value="landing_page">Featured</option>
                 <option value="HasTestimonial">Has Testimonial</option>
                 <option value="in_watchList">In Watchlist</option>
-                <option value="presented_paper">Presented Paper at InSITE</option>
+                <option value="presented_paper">
+                  Presented Paper at InSITE
+                </option>
                 <option value="best_paper">Best Paper for InSITE</option>
               </select>
             </div>
             <div className="flex items-center gap-3">
               <select
                 disabled={isLoading}
-                className={`bg-[#FAFAFA] text-[14px] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`bg-[#FAFAFA] text-[14px] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 {combineList?.map((item: any) => (
                   <option key={item.id} value={item.acronym}>
@@ -367,11 +415,10 @@ const Users = () => {
                 type="text"
                 placeholder="Search..."
                 value={filters.searchQuery}
-                onChange={(e) =>
-                  dispatch(setSearchQuery(e.target.value))
-                }
-                className={`w-full text-[14px] bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+                className={`w-full text-[14px] bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               />
             </div>
           </div>
@@ -421,7 +468,9 @@ const Users = () => {
                   <th className="text-left px-4 py-3 font-semibold text-gray-700 border border-gray-300">
                     Registration ▾
                   </th>
-                  <th className="w-16 px-4 py-3 border border-gray-300  text-gray-700">Delete</th>
+                  <th className="w-16 px-4 py-3 border border-gray-300  text-gray-700">
+                    Delete
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -444,12 +493,20 @@ const Users = () => {
                         className="px-4 py-4 border border-gray-300"
                         onClick={(e) => e.stopPropagation()}
                       >
+                        {/* <input
+                          type="checkbox"
+                          checked={user.isDuplicate || false}
+                          onChange={() => handleSelectUser(user.userId)}
+                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                        /> */}
+
                         <input
                           type="checkbox"
-                          checked={selectedUsers.includes(user.userId)}
+                          checked={selectedUsers.includes(user.userId) || user.isDuplicate}
                           onChange={() => handleSelectUser(user.userId)}
                           className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                         />
+
                       </td>
                       <td className="px-4 py-4 border border-gray-300">
                         <div className="flex items-center gap-3">
