@@ -59,7 +59,7 @@ const initialState: UserState = {
     activeTab: "User",
     typeFilter: "All Types", // single string for UI label
     searchQuery: "",
-    type: [] as string[], // array for API filtering
+    type: "", // array for API filtering
   },
 };
 

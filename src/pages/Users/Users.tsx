@@ -1,8 +1,8 @@
 import { ChevronLeft, ChevronRight, Clock, Trash2, User } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
-import MultiSelectCheckbox, { Option } from "../../components/multi-select";
+
 import { apiService } from "../../services";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchCombineJournals } from "../../store/journalSlice";
@@ -18,44 +18,13 @@ import {
   toggleUserSelection,
 } from "../../store/userSlice";
 
-const typeOptions: Option[] = [
-  { value: "", label: "All Type" },
-  { value: "reviewer", label: "Reviewer" },
-  { value: "editor", label: "Editor" },
-  { value: "Publisher", label: "Publisher" },
-  { value: "Author", label: "Author" },
-  { value: "UnverifiedAuthor", label: "Unverified Article Author" },
-  { value: "NoActiveEmails", label: "Reviewer/Editor With No Active Emails" },
 
-  { value: "", label: "", isDivider: true },
-
-  { value: "gackowski_award_winner", label: "Gackowski Award Winner" },
-  { value: "second_act", label: "Second Act" },
-  { value: "ambassador", label: "Ambassador" },
-  { value: "director", label: "Director" },
-  { value: "honorary_fellow", label: "Honorary Fellow" },
-  { value: "fellow", label: "Fellow" },
-  { value: "governor", label: "Governor" },
-  { value: "executive_director", label: "Executive Director" },
-
-  { value: "", label: "", isDivider: true },
-
-  { value: "isi_founder", label: "Founder" },
-  { value: "alumni", label: "Alumni" },
-  { value: "Member", label: "Member" },
-  { value: "LapsedMember", label: "Lapsed Member" },
-  { value: "landing_page", label: "Featured" },
-  { value: "HasTestimonial", label: "Has Testimonial" },
-  { value: "in_watchList", label: "In Watchlist" },
-  { value: "presented_paper", label: "Presented Paper at InSITE" },
-  { value: "best_paper", label: "Best Paper for InSITE" },
-];
 
 const Users = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+ 
 
   const {
     users,
@@ -131,8 +100,8 @@ const Users = () => {
     const isCurrentlySelected = selectedUsers.includes(userId);
 
     // Update local state (toggle user)
-    let updated;
-
+    let updated
+     updated
     if (isCurrentlySelected) {
       updated = selectedUsers.filter((id) => id !== userId);
     } else {
