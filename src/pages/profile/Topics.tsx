@@ -74,7 +74,8 @@ const Topics = () => {
     );
   };
 
-  const toggleOption = (sectionId: string, optionId: string) => {
+  const toggleOption = (sectionId: string, optionId: string,name?:string) => {
+    if(name)setSelectedTopics([...selectedTopics,name])
     setSections(
       sections.map((section) => {
         if (section.topicId === sectionId && section.options) {
@@ -97,7 +98,7 @@ const Topics = () => {
     optionId: string,
     subOptionId: string
   ) => {
-    alert(11)
+    //alert(11);
     setSections(
       sections.map((section) => {
         if (section.topicId === sectionId && section.options) {
@@ -182,64 +183,86 @@ const Topics = () => {
                   )}
                 </div>
 
-                {section.expanded && section.options && section.options.length > 0 && (
-                  <div className="pl-6 pb-3">
-                    {section.options.map((option) => (
-                      <div key={option.topicId}>
-                        <div
-                          onClick={() =>
-                            option.hasSubOptions
-                              ? toggleOption(section.topicId, option.topicId)
-                              : null
-                          }
-                          className="flex cursor-pointer items-center gap-2 py-2"
-                        >
-                          {option.hasSubOptions ? (
-                            option.expanded ? (
-                              <ChevronDown className="w-3 h-3 text-gray-600" />
+                {section.expanded &&
+                  section.options &&
+                  section.options.length > 0 && (
+                    <div className="pl-6 pb-3">
+                      {section.options.map((option) => (
+                        <div key={option.topicId}>
+                          <div
+                            onClick={() =>
+                              option.hasSubOptions
+                                ? toggleOption(section.topicId, option.topicId)
+                                : null
+                            }
+                            className="flex cursor-pointer items-center gap-2 py-2"
+                          >
+                            {/* {option.hasSubOptions ? (
+                              option.expanded ? (
+                                <ChevronDown className="w-3 h-3 text-gray-600" />
+                              ) : (
+                                <ChevronRight className="w-3 h-3 text-gray-600" />
+                              )
                             ) : (
                               <ChevronRight className="w-3 h-3 text-gray-600" />
-                            )
-                          ) : (
-                            <ChevronRight className="w-3 h-3 text-gray-600" />
-                          )}
-                          <span className="text-gray-700 text-sm">
-                            {option.name}
-                          </span>
-                        </div>
+                            )} */}
+                            
 
-                        {option.hasSubOptions &&
-                          option.expanded &&
-                          option.subOptions && (
-                            <div className="pl-8 space-y-2 pb-2">
-                              {option.subOptions.map((subOption) => (
-                                <label
-                                  key={subOption._id}
-                                  className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 py-1"
-                                >
-                                  <input
-                                    type="checkbox"
-                                    checked={subOption.checked}
-                                    onChange={() =>
-                                      toggleSubOption(
-                                        section.topicId,
-                                        option.topicId,
-                                        subOption._id
-                                      )
-                                    }
-                                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                  />
-                                  <span className="text-gray-700 text-sm">
-                                    {subOption.name}
-                                  </span>
-                                </label>
-                              ))}
-                            </div>
-                          )}
-                      </div>
-                    ))}
-                  </div>
-                )}
+                            <label
+                              key={option.topicId}
+                              className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 py-1"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={option.checked}
+                                onChange={() =>
+                                  toggleOption(
+                                    section.topicId,
+                                    option.topicId,
+                                    option.name
+                                    //option.topicId
+                                  )
+                                }
+                                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                              />
+                              <span className="text-gray-700 text-sm">
+                                {option.name}
+                              </span>
+                            </label>
+                          </div>
+
+                          {option.hasSubOptions &&
+                            option.expanded &&
+                            option.subOptions && (
+                              <div className="pl-8 space-y-2 pb-2">
+                                {option.subOptions.map((subOption) => (
+                                  <label
+                                    key={subOption._id}
+                                    className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 py-1"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={subOption.checked}
+                                      onChange={() =>
+                                        toggleSubOption(
+                                          section.topicId,
+                                          option.topicId,
+                                          subOption._id
+                                        )
+                                      }
+                                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    />
+                                    <span className="text-gray-700 text-sm">
+                                      {subOption.name}
+                                    </span>
+                                  </label>
+                                ))}
+                              </div>
+                            )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
               </div>
             ))}
           </div>
@@ -258,11 +281,11 @@ const Topics = () => {
           <div className="relative">
             <select
               multiple
-              className="w-full h-48 border border-gray-300 rounded p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full h-48 border  border-gray-300 rounded p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               size={8}
             >
               {selectedTopics.map((topic, index) => (
-                <option key={index} value={topic}>
+                <option key={index} value={topic} className="text-gray-600 font-md">
                   {topic}
                 </option>
               ))}
