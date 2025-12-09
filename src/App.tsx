@@ -33,6 +33,11 @@ import PersonalInfo from "./pages/profile/PersonalInfo";
 import Preferences from "./pages/profile/Preferences";
 import Profile from "./pages/profile/Profile";
 import Topics from "./pages/profile/Topics";
+import ContentHeader from "./pages/Contents/contentHeader";
+import FAQ from "./pages/Contents/FAQ";
+import AboutUsPage from "./pages/Contents/aboutUs";
+import FAQForm from "./pages/Contents/addFAQ";
+import AboutUsForm from "./pages/Contents/addAboutUs";
 
 // Profile subpages
 
@@ -83,8 +88,23 @@ const App: React.FC = () => {
             <Route path="topics-page" element={<TopicsPage />} />
             <Route path="sub-topics" element={<SubTopicsPage />} />
           </Route>
+
+          
+
           <Route path="create-topic" element={<TopicForm />} />
           <Route path="create-subtopic" element={<SubTopicForm />} />
+
+           <Route path="contents" element={<ContentHeader />}>
+            {/* 👇 This acts as the default route for /profile */}
+            <Route index element={<Navigate to="faq" replace />} />
+            {/* <Route index element={<PersonalInfo />} /> */}
+
+            <Route path="faq" element={<FAQ />} />
+            <Route path="about-us" element={<AboutUsPage />} />
+          </Route>
+           
+           <Route path="create-faq" element={<FAQForm />} />
+           <Route path="create-about-us" element={<AboutUsForm />} />
 
           <Route path="track-type" element={<TrackTypeHeader />}>
             {/* 👇 This acts as the default route for /profile */}

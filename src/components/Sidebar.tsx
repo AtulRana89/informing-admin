@@ -26,6 +26,7 @@ const Sidebar = () => {
 
     { icon: FolderOpen, label: "Topics", path: "topic/topics-page" },
     { icon: File, label: "Tracks,Types ", path: "track-type/track" },
+    { icon: FolderOpen, label: "Contents", path: "contents/faq" },
     //{ icon: TrendingUp, label: "NEWS", path: "/news" },
     //{ icon: Mail, label: "NOTIFICATIONS", path: "/notifications" },
     //{ icon: Zap, label: "FAST-TRACK", path: "/fast-track" },

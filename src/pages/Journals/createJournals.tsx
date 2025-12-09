@@ -53,7 +53,7 @@ const newJournalSchema = z.object({
 type JournalFormData = z.infer<typeof newJournalSchema>;
 
 // TipTap Rich Text Editor Component
-const TipTapEditor = ({
+export const TipTapEditor = ({
   value,
   onChange,
   error,
