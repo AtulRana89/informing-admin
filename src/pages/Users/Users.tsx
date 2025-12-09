@@ -2,6 +2,8 @@ import { ChevronLeft, ChevronRight, Clock, Trash2, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import MultiSelectCheckbox, { Option } from "../../components/multi-select";
+import { apiService } from "../../services";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchCombineJournals } from "../../store/journalSlice";
 import {
@@ -15,8 +17,6 @@ import {
   setSearchType,
   toggleUserSelection,
 } from "../../store/userSlice";
-import { apiService } from "../../services";
-import MultiSelectCheckbox, { Option } from "../../components/multi-select";
 
 const typeOptions: Option[] = [
   { value: "", label: "All Type" },
@@ -100,7 +100,7 @@ const Users = () => {
 
     if (filters.activeTab && filters.activeTab !== "User") {
       if (filters.activeTab == "Duplicate") {
-        params.role = "isDuplicate";
+        params.isDuplicate = true;
       } else {
         params.role = filters.activeTab.toLowerCase();
       }
@@ -265,11 +265,10 @@ const Users = () => {
           <button
             key={i}
             onClick={() => handlePageChange(i)}
-            className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${
-              currentPage === i
-                ? "!bg-[#4A8BC2] !text-white"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
+            className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${currentPage === i
+              ? "!bg-[#4A8BC2] !text-white"
+              : "text-gray-600 hover:bg-gray-100"
+              }`}
           >
             {i}
           </button>
@@ -281,11 +280,10 @@ const Users = () => {
         <button
           key={1}
           onClick={() => handlePageChange(1)}
-          className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${
-            currentPage === 1
-              ? "!bg-[#4A8BC2] !text-white"
-              : "!text-gray-600 hover:bg-gray-100"
-          }`}
+          className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${currentPage === 1
+            ? "!bg-[#4A8BC2] !text-white"
+            : "!text-gray-600 hover:bg-gray-100"
+            }`}
         >
           1
         </button>
@@ -309,11 +307,10 @@ const Users = () => {
           <button
             key={i}
             onClick={() => handlePageChange(i)}
-            className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${
-              currentPage === i
-                ? "bg-[#4A8BC2] text-white"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
+            className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${currentPage === i
+              ? "bg-[#4A8BC2] text-white"
+              : "text-gray-600 hover:bg-gray-100"
+              }`}
           >
             {i}
           </button>
@@ -333,11 +330,10 @@ const Users = () => {
         <button
           key={totalPages}
           onClick={() => handlePageChange(totalPages)}
-          className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${
-            currentPage === totalPages
-              ? "bg-[#4A8BC2] text-white"
-              : "text-gray-600 hover:bg-gray-100"
-          }`}
+          className={`px-4 py-2 rounded !border-none !outline-none !ring-0 focus:!outline-none focus:!border-none focus:!ring-0 active:!outline-none active:!border-none active:!ring-0 ${currentPage === totalPages
+            ? "bg-[#4A8BC2] text-white"
+            : "text-gray-600 hover:bg-gray-100"
+            }`}
         >
           {totalPages}
         </button>
@@ -346,7 +342,7 @@ const Users = () => {
 
     return buttons;
   };
-  const handleType = (values: string[]) => {
+  const handleType = (values: string) => {
     dispatch(setSearchType(values));
   };
 
@@ -377,11 +373,10 @@ const Users = () => {
               <div
                 key={tab}
                 onClick={() => onTabClick(tab)}
-                className={`px-2 py-2 rounded-xl cursor-pointer ${
-                  filters.activeTab == tab
-                    ? "!bg-[#568fce] text-white"
-                    : "bg-white text-gray-400 border border-gray-300 hover:border-gray-400"
-                }`}
+                className={`px-2 py-2 rounded-xl cursor-pointer ${filters.activeTab == tab
+                  ? "!bg-[#568fce] text-white"
+                  : "bg-white text-gray-400 border border-gray-300 hover:border-gray-400"
+                  }`}
               >
                 {tab}
               </div>
@@ -389,7 +384,7 @@ const Users = () => {
           </div>
 
           <div className="flex gap-3 ">
-            <div className="flex items-center ">
+            {/* <div className="flex items-center ">
               <MultiSelectCheckbox
                 options={typeOptions}
                 value={selectedTypes}
@@ -398,14 +393,58 @@ const Users = () => {
                 disabled={false}
                 isLoading={isLoading}
               />
+            </div> */}
+            <div className="flex items-center gap-3">
+              <select
+                disabled={isLoading}
+                onChange={(e) => handleType(e.target.value)}
+                className={`bg-[#FAFAFA] text-[14px] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+              >
+                <option value="">All Type</option>
+                <option value="reviewer">Reviewer</option>
+                <option value="editor">Editor</option>
+                <option value="Publisher">Publisher</option>
+                <option value="Author">Author</option>
+                <option value="UnverifiedAuthor">
+                  Unverified Article Author
+                </option>
+                <option value="NoActiveEmails">
+                  Reviewer/Editor With No Active Emails
+                </option>
+
+                <option value="">---------</option>
+                <option value="gackowski_award_winner">
+                  Gackowski Award Winner
+                </option>
+                <option value="second_act">Second Act</option>
+                <option value="ambassador">Ambassador</option>
+                <option value="director">Director</option>
+                <option value="honorary_fellow">Honorary Fellow</option>
+                <option value="fellow">Fellow</option>
+                <option value="governor">Governor</option>
+                <option value="executive_director">Executive Director</option>
+                <option value="">---------</option>
+
+                <option value="isi_founder">Founder</option>
+                <option value="alumni">Alumni</option>
+                <option value="Member">Member</option>
+                <option value="LapsedMember">Lapsed Member</option>
+                <option value="landing_page">Featured</option>
+                <option value="HasTestimonial">Has Testimonial</option>
+                <option value="in_watchList">In Watchlist</option>
+                <option value="presented_paper">
+                  Presented Paper at InSITE
+                </option>
+                <option value="best_paper">Best Paper for InSITE</option>
+              </select>
             </div>
 
             <div className="flex items-center gap-3">
               <select
                 disabled={isLoading}
-                className={`bg-[#FAFAFA] text-[14px] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`bg-[#FAFAFA] text-[14px] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
               >
                 {combineList?.map((item: any) => (
                   <option key={item.id} value={item.acronym}>
@@ -426,9 +465,8 @@ const Users = () => {
                 placeholder="Search..."
                 value={filters.searchQuery}
                 onChange={(e) => dispatch(setSearchQuery(e.target.value))}
-                className={`w-full text-[14px] bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`w-full text-[14px] bg-[#FAFAFA] border border-gray-300 rounded px-3 py-2 text-black focus:outline-none focus:border-gray-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
               />
             </div>
           </div>

@@ -42,7 +42,7 @@ interface UserState {
     activeTab: string | null;
     typeFilter: string;
     searchQuery: string;
-    type: string[];
+    type: string;
   };
 }
 
@@ -128,11 +128,15 @@ const userSlice = createSlice({
       state.filters.searchQuery = action.payload;
       state.currentPage = 1;
     },
-    setSearchType: (state, action: PayloadAction<string[]>) => {
-      state.filters.type = action.payload; // array for API
-      state.filters.typeFilter = action.payload.length // for UI display
-        ? action.payload.join(", ")
-        : "All Types"; // default label
+    // setSearchType: (state, action: PayloadAction<string[]>) => {
+    //   state.filters.type = action.payload; // array for API
+    //   state.filters.typeFilter = action.payload.length // for UI display
+    //     ? action.payload.join(", ")
+    //     : "All Types"; // default label
+    //   state.currentPage = 1;
+    // },
+    setSearchType: (state, action: PayloadAction<string>) => {
+      state.filters.type = action.payload;
       state.currentPage = 1;
     },
 
