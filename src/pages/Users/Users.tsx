@@ -8,9 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { fetchCombineJournals } from "../../store/journalSlice";
 import {
   deleteUser,
-  deselectAllUsers,
   fetchUsers,
-  selectAllUsers,
   setActiveTab,
   setCurrentPage,
   setSearchQuery,
@@ -87,14 +85,6 @@ const Users = () => {
     limit,
     dispatch,
   ]);
-
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      dispatch(selectAllUsers());
-    } else {
-      dispatch(deselectAllUsers());
-    }
-  };
 
   const handleSelectUser = async (userId: string) => {
     const isCurrentlySelected = selectedUsers.includes(userId);
@@ -517,16 +507,16 @@ const Users = () => {
                           onChange={() => handleSelectUser(user.userId)}
                           className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                         /> */}
-                      <div className="flex justify-center">
-                        <input
-                          type="checkbox"
-                          checked={
-                            selectedUsers.includes(user.userId) ||
-                            user.isDuplicate
-                          }
-                          onChange={() => handleSelectUser(user.userId)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                        />
+                        <div className="flex justify-center">
+                          <input
+                            type="checkbox"
+                            checked={
+                              selectedUsers.includes(user.userId) ||
+                              user.isDuplicate
+                            }
+                            onChange={() => handleSelectUser(user.userId)}
+                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                          />
                         </div>
                       </td>
                       <td className="px-4 py-4 border border-gray-300">
