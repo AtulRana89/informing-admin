@@ -270,11 +270,6 @@ const AccountInfo = () => {
     setValue("isiPositions", updated as AccountInfoFormData["isiPositions"]);
   };
 
-  const handleType = (newSelected: string[]) => {
-    console.log("Selected roles:", newSelected);
-    setValue("role", newSelected);
-  };
-
   // Show loading state while fetching data
   if (isFetching) {
     return (
