@@ -508,7 +508,7 @@ const Users = () => {
                       }
                     >
                       <td
-                        className="px-4 py-4 border border-gray-300 flex justify-center "
+                        className="px-4 py-4 border border-gray-300 "
                         onClick={(e) => e.stopPropagation()}
                       >
                         {/* <input
@@ -517,7 +517,7 @@ const Users = () => {
                           onChange={() => handleSelectUser(user.userId)}
                           className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                         /> */}
-
+                      <div className="flex justify-center">
                         <input
                           type="checkbox"
                           checked={
@@ -527,6 +527,7 @@ const Users = () => {
                           onChange={() => handleSelectUser(user.userId)}
                           className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                         />
+                        </div>
                       </td>
                       <td className="px-4 py-4 border border-gray-300">
                         <div className="flex items-center gap-3">
