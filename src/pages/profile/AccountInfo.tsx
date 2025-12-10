@@ -1,10 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from 'react';
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { apiService } from '../../services';
-import toast from "react-hot-toast";
+import { Controller, useForm } from "react-hook-form";
 
+import toast from "react-hot-toast";
+import * as z from "zod";
+import MultiSelectCheckbox from "../../components/multi-select";
+import { apiService } from '../../services';
+
+const typeOptions = [
+  { value: "admin", label: "Admin" },
+  { value: "eic", label: "Eic" },
+  { value: "user", label: "User" },
+];
 
 // Define the validation schema - ONLY fields present in this form
 const accountInfoSchema = z.object({
@@ -17,7 +24,10 @@ const accountInfoSchema = z.object({
 
   // Admin Settings - Left Column
   // username: z.string().optional().or(z.literal("")),
-  role: z.string().min(1, "Role is required"),
+  // role: z.string().min(1, "Role is required"),
+  role: z
+    .array(z.string().min(1))
+    .min(1, "At least one role is required"),
   status: z.string().min(1, "Status is required"),
   isPendingAuthor: z.boolean().optional(),
   isiPositions: z.array(z.enum([
@@ -74,6 +84,7 @@ const AccountInfo = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    control,
     setValue,
     watch,
     reset,
@@ -87,7 +98,7 @@ const AccountInfo = () => {
       receiveReminderEmail: false,
       receiveSecondaryEmail: '',
       // username: '',
-      role: 'admin',
+      role: [],
       status: 'active',
       isPendingAuthor: false,
       testimonial: '',
@@ -135,7 +146,8 @@ const AccountInfo = () => {
         setValue("receiveSecondaryEmail", response.receiveSecondaryEmail || "");
         // setValue("receiveSecondary", response.receiveSecondaryEmail ?? false);
         // setValue("username", response.username || "");
-        setValue("role", response.role || "admin");
+        // setValue("role", response.role || "admin");
+        setValue("role", Array.isArray(response.role) ? response.role : [response.role]);
         setValue("status", response.status || "active");
         setValue("isPendingAuthor", response.isPendingAuthor ?? false);
         setValue("testimonial", response.testimonial || "");
@@ -256,6 +268,11 @@ const AccountInfo = () => {
       ? [...currentPositions, position]
       : currentPositions.filter((p) => p !== position);
     setValue("isiPositions", updated as AccountInfoFormData["isiPositions"]);
+  };
+
+  const handleType = (newSelected: string[]) => {
+    console.log("Selected roles:", newSelected);
+    setValue("role", newSelected);
   };
 
   // Show loading state while fetching data
@@ -384,7 +401,33 @@ const AccountInfo = () => {
                 <label className="block text-gray-700 font-semibold mb-2">
                   Role <span className="text-red-600">*</span>
                 </label>
-                <select
+                {/* <Controller
+                  name="role"
+                  control={control}
+                  render={({ field }) => (
+                    <MultiSelectCheckbox
+                      options={typeOptions}
+                      value={field.value ?? []}
+                      onChange={handleType}
+                      placeholder="All Types"
+                      disabled={false}
+                      isLoading={isLoading}
+                    />
+                  )}
+                /> */}
+                <Controller
+                  name="role"
+                  control={control}
+                  render={({ field }) => (
+                    <MultiSelectCheckbox
+                      options={typeOptions}
+                      value={field.value ?? []}
+                      onChange={(selected) => field.onChange(selected)}
+                      placeholder="Select roles"
+                    />
+                  )}
+                />
+                {/* <select
                   {...register("role")}
                   disabled={isLoading}
                   className={`w-full border ${errors.role ? "border-red-500" : "border-gray-300"
@@ -395,7 +438,7 @@ const AccountInfo = () => {
                   <option value="Editor">Editor</option>
                   <option value="Reviewer">Reviewer</option>
                   <option value="Author">Author</option>
-                </select>
+                </select> */}
                 {errors.role && (
                   <p className="text-red-600 text-sm mt-1">{errors.role.message}</p>
                 )}
@@ -451,7 +494,7 @@ const AccountInfo = () => {
                     { key: 'ambassador', label: 'Ambassador' },
                     { key: 'second_act', label: 'Second Act' },
                     { key: 'gackowski_award_winner', label: 'Gackowski Award Winner' }
-                  ].map(({ key, label }:any) => (
+                  ].map(({ key, label }: any) => (
                     <div key={key} className="flex items-center">
                       <input type="checkbox" id={key} disabled={isLoading} checked={watch("isiPositions")?.includes(key) || false} onChange={(e) => handleCheckboxChange(key, e.target.checked)} className="w-4 h-4 text-blue-600 border-gray-300 rounded" />
                       <label htmlFor={key} className="ml-2 text-gray-700">

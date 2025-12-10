@@ -24,7 +24,7 @@ const Users = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
- 
+
 
   const {
     users,
@@ -67,7 +67,7 @@ const Users = () => {
       params.text = filters.searchQuery.trim();
     }
 
-    if (filters.activeTab && filters.activeTab !== "User") {
+    if (filters.activeTab) {
       if (filters.activeTab == "Duplicate") {
         params.isDuplicate = true;
       } else {
@@ -101,7 +101,7 @@ const Users = () => {
 
     // Update local state (toggle user)
     let updated
-     updated
+    updated
     if (isCurrentlySelected) {
       updated = selectedUsers.filter((id) => id !== userId);
     } else {

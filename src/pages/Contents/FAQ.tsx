@@ -1,152 +1,79 @@
-import {
-  ChevronLeft,
-  ChevronRight,
-  GripVertical,
-  SquarePen,
-  Trash2,
-} from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
 import {
-  deleteJournal,
-  fetchJournals,
-  FetchJournalsParams,
-  ReorderItem,
-  reorderTopics,
-  setCurrentPage,
-} from "../../store/topicSlice";
-
+  deletefaq,
+  fetchfaqs,
+  setCurrentPage
+} from "../../store/faqSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  DropResult,
-} from "@hello-pangea/dnd";
-
-// -----------------------------
-// Journal Type
-// -----------------------------
-interface Journal {
-  journalId: number;
-  topicId: number;
-  name: string;
-  overviewDescription: string;
-}
-
-const FAQ = () => {
+const faqPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const {
-    journals,
+    faqs,
     totalCount,
     currentPage,
     itemsPerPage,
     isLoading,
     error,
-    filters,
-  } = useAppSelector((state) => state.topic);
-
-  const [localList, setLocalList] = useState<Journal[]>([]);
+    filters
+  } = useAppSelector((state) => state.faq);
 
   const totalPages = Math.ceil(totalCount / itemsPerPage);
 
-  // preload local list when journals change
-  useEffect(() => {
-    const mapped = journals.map((j) => ({
-      ...j,
-      journalId: j.topicId, // convert to component's expected format
-    }));
-
-    setLocalList(mapped);
-  }, [journals]);
-
-  // ------------------------------------
-  // Fetch journals
-  // ------------------------------------
+  // Fetch faq when page or filters change
   useEffect(() => {
     const offset = (currentPage - 1) * itemsPerPage;
 
-    const params: FetchJournalsParams = {
+    const params: any = {
       offset,
       limit: itemsPerPage,
     };
 
     if (filters.searchText) params.text = filters.searchText;
-    if (filters.journalId) params.journalId = filters.journalId;
+    if (filters.faqId) params.faqId = filters.faqId;
     if (filters.type) params.type = filters.type;
 
-    dispatch(fetchJournals(params));
+    dispatch(fetchfaqs(params));
   }, [currentPage, filters, itemsPerPage, dispatch]);
 
-  // ------------------------------------
-  // delete
-  // ------------------------------------
-  const handleDelete = async (
-    id: number,
-    e: React.MouseEvent<SVGSVGElement>
-  ) => {
+  // Handle delete faq
+  const handleDelete = async (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
 
-    if (!window.confirm("Are you sure you want to delete this journal?"))
+    if (!window.confirm("Are you sure you want to delete this faq?")) {
       return;
+    }
 
     try {
-      await dispatch(deleteJournal(id)).unwrap();
-      toast.success("Journal deleted successfully");
-    } catch (err) {
-      toast.error((err as string) || "Delete failed");
+      await dispatch(deletefaq(id)).unwrap();
+      toast.success("faq deleted successfully");
+    } catch (err: any) {
+      toast.error(err || "Failed to delete faq");
     }
   };
 
-  // ------------------------------------
-  // pagination
-  // ------------------------------------
   const handlePageChange = (page: number) => {
     dispatch(setCurrentPage(page));
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // ------------------------------------
-  // drag end handler
-  // ------------------------------------
-  const handleDragEnd = async (result: DropResult) => {
-    if (!result.destination) return;
-
-    const newList = [...localList];
-    const [moved] = newList.splice(result.source.index, 1);
-    newList.splice(result.destination.index, 0, moved);
-
-    setLocalList(newList);
-
-    const reorderedPayload: ReorderItem[] = newList.map((item, index) => ({
-      _id: item.topicId,
-      sortOrder: index + 1,
-    }));
-
-    try {
-      await dispatch(reorderTopics({ items: reorderedPayload })).unwrap();
-      // toast.success("Order updated");
-    } catch {
-      // toast.error("Failed to update order");
-    }
-  };
-
-  // ------------------------------------
-  // pagination numbers
-  // ------------------------------------
-  const getPageNumbers = (): (number | string)[] => {
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
     const pages: (number | string)[] = [];
 
     if (totalPages <= 7) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
     } else {
-      if (currentPage <= 3) pages.push(1, 2, 3, 4, "...", totalPages);
-      else if (currentPage >= totalPages - 2)
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, 4, "...", totalPages);
+      } else if (currentPage >= totalPages - 2) {
         pages.push(
           1,
           "...",
@@ -155,7 +82,7 @@ const FAQ = () => {
           totalPages - 1,
           totalPages
         );
-      else
+      } else {
         pages.push(
           1,
           "...",
@@ -165,172 +92,179 @@ const FAQ = () => {
           "...",
           totalPages
         );
+      }
     }
+
     return pages;
   };
 
   return (
     <div className="bg-[#fff] min-h-screen">
       <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <div className="text-2xl font-light text-gray-600 ">Topics</div>
-
+          <div className="text-2xl font-light text-gray-600">
+            Faq
+          </div>
           <div
             onClick={() => navigate("/create-faq")}
-            className="!bg-[#3d7ab5] hover:!bg-[#2b5f85] cursor-pointer text-white font-medium px-6 py-2.5 !border-b-4"
+            className="!bg-[#3d7ab5] hover:!bg-[#2b5f85] !border-[#2b5f85] cursor-pointer text-white font-medium px-6 py-2.5 !border-b-4 transition"
           >
             + Add New
           </div>
         </div>
 
+        {/* Results Count */}
         {!isLoading && (
           <div className="mb-4 text-sm text-gray-600">
-            Showing {localList?.length} of {totalCount}
+            Showing {faqs.length} of {totalCount.toLocaleString()} faqs
           </div>
         )}
 
+        {/* Error Message */}
         {error && (
           <div className="mb-4 p-4 bg-red-50 border border-red-300 rounded-lg text-red-700">
             {error}
           </div>
         )}
 
-        {/* DRAG-DROP TABLE ---------------------- */}
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="topics">
-            {(provided) => (
-              <table
-                ref={provided.innerRef}
-                {...provided?.droppableProps}
-                className="w-full border-collapse  border border-gray-300 "
-              >
+        {/* Loading State */}
+        {false ? (
+          <div className="bg-white border border-gray-300 rounded-lg p-12 text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#4282c8]"></div>
+            <p className="mt-4 text-gray-600">Loading faqs...</p>
+          </div>
+        ) : faqs.length === 0 ? (
+          <div className="bg-white border border-gray-300 rounded-lg p-12 text-center">
+            <p className="text-gray-600">No faqs found</p>
+          </div>
+        ) : (
+          <>
+            {/* faq Table */}
+            <div className="bg-white border border-gray-300 rounded overflow-hidden">
+              <table className="w-full border-collapse">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th className="w-12 px-4 py-3 border border-gray-300 text-gray-700 ">Shuffle</th>
-                    <th className="px-4 py-3 border text-left text-gray-700 border border-gray-300">Topics</th>
-                    <th className="px-4 py-3 border w-20 border-gray-300 text-gray-700">Edit</th>
-                    <th className="px-4 py-3 border w-20 border-gray-300 text-gray-700">Delete</th>
+                    <th className="w-12 px-4 py-3 border border-gray-300 text-gray-700">Sr.no</th>
+                    <th className="text-left px-4 py-3 font-semibold text-gray-700 border border-gray-300">
+                      Question
+                    </th>
+                    <th className="text-left px-4 py-3 font-semibold text-gray-700 border border-gray-300">
+                      Answer
+                    </th>
+                    <th className="w-20 px-4 py-3 border border-gray-300 text-gray-700">Delete</th>
                   </tr>
                 </thead>
-
                 <tbody>
-                  {localList?.map((journal, index) => (
-                    <Draggable
-                      key={journal.topicId}
-                      draggableId={journal?.topicId?.toString()}
-                      index={index}
+                  {faqs.map((faq, index) => (
+                    <tr
+                      key={faq.faqId}
+                      className="hover:bg-gray-50 cursor-pointer"
                     >
-                      {(provided) => (
-                        <tr
-                          ref={provided.innerRef}
-                          {...provided?.draggableProps}
-                          className="hover:bg-gray-50 cursor-pointer border-gray-300"
+                      <td className="px-4 py-4 border border-gray-300 text-center text-gray-700">
+                        {/* <button
+                          className="text-gray-400 hover:text-gray-600 cursor-move"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          <td
-                            className="px-4 py-4 border text-center border-gray-300"
-                            {...provided.dragHandleProps}
+                          <GripVertical size={20} />
+                        </button> */}
+                        {(currentPage - 1) * itemsPerPage + (index + 1)}
+                      </td>
+                      <td className="px-4 py-4 border border-gray-300">
+                        <div>
+                          <div
+                            className="text-blue-600 hover:underline font-normal mb-1"
+                            onClick={() =>
+                              navigate(
+                                `/create-faq?faqId=${faq.faqId}`
+                              )
+                            }
                           >
-                            <GripVertical size={20} className="text-gray-400" />
-                          </td>
+                            {faq.question}
+                          </div>
+                        </div>
+                      </td>
 
-                          <td className="px-4 py-4 border border-gray-300">
-                            <div>
-                              <div
-                                onClick={() =>
-                                  navigate(
-                                    `/create-faq?journalId=${journal?.topicId}`
-                                  )
-                                }
-                                className="text-blue-600 hover:underline font-normal mb-1"
-                              >
-                                {journal?.name}
-                              </div>
 
-                              <div
-                                className="text-gray-600 text-sm"
-                                dangerouslySetInnerHTML={{
-                                  __html: journal.overviewDescription,
-                                }}
-                              />
-                            </div>
-                          </td>
-
-                          <td className="px-4 py-4 border border-gray-300 text-center">
-                            <SquarePen
-                              size={20}
-                              className="text-gray-900 hover:text-blue-800 hover:text-red-600"
-                              onClick={() =>
-                                navigate(
-                                  `/create-faq?journalId=${journal?.topicId}`
-                                )
-                              }
-                            />
-                          </td>
-
-                          <td className="px-4 py-4 border border-gray-300 text-center">
-                            <Trash2
-                              size={20}
-                              className="text-red-400 hover:text-red-600"
-                              onClick={(e) => handleDelete(journal?.topicId, e)}
-                            />
-                          </td>
-                        </tr>
-                      )}
-                    </Draggable>
+                      <td className="px-4 py-4 border border-gray-300">
+                        <span
+                          className={`text-sm text-gray-600"`}
+                        >
+                          <div
+                            className="text-gray-600 text-sm"
+                            dangerouslySetInnerHTML={{
+                              __html: faq.answer,
+                            }}
+                          />
+                        </span>
+                      </td>
+                      {/* <td className="px-4 py-4 bg-transparent text-center border border-gray-300">
+                        <button
+                          onClick={(e) => handleDelete(faq.faqId, e)}
+                          className=" hover:!border-none text-red-400 hover:text-red-600 transition"
+                        >
+                          <Trash2 size={20} />
+                        </button>
+                      </td> */}
+                      <td className="px-4 py-4 border text-center border-gray-300">
+                        <Trash2
+                          size={20}
+                          className="text-red-400 hover:text-red-600"
+                          onClick={(e) => handleDelete(faq.faqId, e)}
+                        />
+                      </td>
+                    </tr>
                   ))}
-
-                  {provided?.placeholder}
                 </tbody>
               </table>
-            )}
-          </Droppable>
-        </DragDropContext>
+            </div>
 
-        {/* PAGINATION */}
-        {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-2 mt-6">
-            <button
-              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded"
-            >
-              <ChevronLeft size={20} />
-            </button>
-
-            {getPageNumbers().map((pg, i) =>
-              typeof pg === "number" ? (
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2 mt-6">
                 <button
-                  key={i}
-                  onClick={() => handlePageChange(pg)}
-                  className={`px-4 py-2 rounded ${
-                    currentPage === pg
-                      ? "bg-[#4A8BC2] text-white"
-                      : "text-gray-600 hover:bg-gray-100"
-                  }`}
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {pg}
+                  <ChevronLeft size={20} />
                 </button>
-              ) : (
-                <span key={i} className="px-2">
-                  {pg}
-                </span>
-              )
-            )}
 
-            <button
-              onClick={() =>
-                handlePageChange(Math.min(totalPages, currentPage + 1))
-              }
-              disabled={currentPage === totalPages}
-              className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded"
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
+                {getPageNumbers().map((page, index) =>
+                  typeof page === "number" ? (
+                    <button
+                      key={index}
+                      onClick={() => handlePageChange(page)}
+                      className={`px-4 py-2 rounded ${currentPage === page
+                        ? "bg-[#4A8BC2] text-white"
+                        : "text-gray-600 hover:bg-gray-100"
+                        }`}
+                    >
+                      {page}
+                    </button>
+                  ) : (
+                    <span key={index} className="px-2 text-gray-500">
+                      {page}
+                    </span>
+                  )
+                )}
+
+                <button
+                  onClick={() =>
+                    handlePageChange(Math.min(totalPages, currentPage + 1))
+                  }
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronRight size={20} />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
   );
 };
 
-export default FAQ;
+export default faqPage;

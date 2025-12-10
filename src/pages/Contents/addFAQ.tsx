@@ -1,19 +1,18 @@
-import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as z from "zod";
 import { apiService } from "../../services";
-import { TipTapEditor } from "../Journals/createJournals";
 
 // ✅ Validation schema
 const schema = z.object({
-  name: z
+  question: z
     .string()
     .min(1, "Title is required")
     .min(3, "Title must be at least 3 characters"),
-  overviewDescription: z
+  answer: z
     .string()
     .min(1, "Description is required"),
 });
@@ -26,7 +25,7 @@ export default function FAQForm() {
 
   // ✅ Read journalId from URL
   const params = new URLSearchParams(location.search);
-  const id = params.get("journalId");
+  const id = params.get("faqId");
   const isEditMode = !!id;
 
   const [loading, setLoading] = useState(false);
@@ -36,12 +35,11 @@ export default function FAQForm() {
     handleSubmit,
     formState: { errors },
     setValue,
-    control
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: "",
-      overviewDescription: "",
+      question: "",
+      answer: "",
     },
   });
 
@@ -51,14 +49,14 @@ export default function FAQForm() {
       const fetchData = async () => {
         try {
           setLoading(true);
-          const response = await apiService.get("/topic/list", {
+          const response = await apiService.get("/faq/list", {
             params: { topicId: id },
           });
 
           if (response?.data?.list[0]) {
-            const topicData = response.data.list[0];
-            setValue("name", topicData.name || "");
-            setValue("overviewDescription", topicData.overviewDescription || "");
+            const faqData = response.data.list[0];
+            setValue("question", faqData.question || "");
+            setValue("answer", faqData.answer || "");
           }
         } catch (error: any) {
           toast.error(error.response?.data?.message || "Failed to load topic");
@@ -76,18 +74,18 @@ export default function FAQForm() {
       setLoading(true);
 
       const payload = {
-        name: data.name,
-        overviewDescription: data.overviewDescription,
+        question: data.question,
+        answer: data.answer,
       };
 
       if (isEditMode) {
-        await apiService.put(`/topic/`, {
-          topicId: id,
+        await apiService.put(`/faq/update`, {
+          faqId: id,
           ...payload,
         });
         toast.success("Updated successfully!");
       } else {
-        await apiService.post("/topic", payload);
+        await apiService.post("/faq/create", payload);
         toast.success("Created successfully!");
       }
       navigate(-1);
@@ -108,41 +106,32 @@ export default function FAQForm() {
         {/* ✅ Title field */}
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">
-            Title <span className="text-red-600">*</span>
+            Question <span className="text-red-600">*</span>
           </label>
           <input
             type="text"
-            {...register("name")}
+            {...register("question")}
             disabled={loading}
-            className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${
-              errors.name ? "border-red-500" : "border-gray-300"
-            } rounded focus:outline-none focus:ring-1 ${
-              errors.name ? "focus:ring-red-500" : "focus:ring-blue-500"
-            }`}
-            placeholder="Enter title"
+            className={`w-full !bg-[#FAFAFA] px-3 py-2 border ${errors.question ? "border-red-500" : "border-gray-300"
+              } rounded focus:outline-none focus:ring-1 ${errors.question ? "focus:ring-red-500" : "focus:ring-blue-500"
+              }`}
+            placeholder="Enter question"
           />
-          {errors.name && (
-            <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>
+          {errors.question && (
+            <p className="text-red-600 text-sm mt-1">{errors.question.message}</p>
           )}
         </div>
 
         {/* ✅ Editor field */}
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">
-            Description <span className="text-red-600">*</span>
+            Answer <span className="text-red-600">*</span>
           </label>
-          <Controller
-            name="overviewDescription"
-            control={control}
-            render={({ field }) => (
-              <TipTapEditor
-                value={field.value}
-                onChange={field.onChange}
-                error={errors.overviewDescription?.message}
-                disabled={loading}
-              />
-            )}
-          />
+          <textarea
+            className="w-full bg-[#FAFAFA] h-32 p-3 border border-gray-300 rounded focus:!outline-none focus:!ring-0 focus:!border-gray-400 "
+            placeholder="Write something..."
+            {...register("answer")}
+          ></textarea>
         </div>
 
         {/* ✅ Buttons */}
@@ -158,8 +147,8 @@ export default function FAQForm() {
                 ? "Updating..."
                 : "Saving..."
               : isEditMode
-              ? "Update"
-              : "Save"}
+                ? "Update"
+                : "Save"}
           </button>
 
           <button

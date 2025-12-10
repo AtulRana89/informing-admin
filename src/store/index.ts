@@ -1,20 +1,23 @@
 import { configureStore } from '@reduxjs/toolkit';
 import conferenceReducer from './conferenceSlice';
+import faqReducer from './faqSlice';
 import journalReducer from './journalSlice';
-import userReducer from './userSlice';
+import subTopicReducer from './subTopicSlice';
+import topicReducer from './topicSlice';
 import trackReducer from './trackSlice';
 import typeReducer from './typeSlice';
-import topicReducer from './topicSlice';
-import subTopicReducer from './subTopicSlice';
+import userReducer from './userSlice';
+
 export const store = configureStore({
   reducer: {
     conferences: conferenceReducer,
     journals: journalReducer,
     users: userReducer,
-    track:trackReducer,
-    type:typeReducer,
-    topic:topicReducer,
-    subtopic:subTopicReducer,
+    track: trackReducer,
+    type: typeReducer,
+    topic: topicReducer,
+    subtopic: subTopicReducer,
+    faq: faqReducer,
     // Add other reducers here
   },
 });
