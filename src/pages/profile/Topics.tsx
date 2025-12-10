@@ -74,18 +74,33 @@ const Topics = () => {
     );
   };
 
-  const toggleOption = (sectionId: string, optionId: string,name?:string) => {
-    if(name)setSelectedTopics([...selectedTopics,name])
+  const toggleOption = (sectionId: string, optionId: string, name?: string) => {
     setSections(
       sections.map((section) => {
         if (section.topicId === sectionId && section.options) {
           return {
             ...section,
-            options: section.options.map((option) =>
-              option.topicId === optionId
-                ? { ...option, expanded: !option.expanded }
-                : option
-            ),
+            options: section.options.map((option) => {
+              if (option.topicId === optionId) {
+                const newChecked = !option.checked;
+
+                // Update selected topics when checked/unchecked
+                if (name) {
+                  setSelectedTopics(
+                    (prev) =>
+                      newChecked
+                        ? [...prev, name] // ADD name
+                        : prev.filter((t) => t !== name) // REMOVE name
+                  );
+                }
+
+                return {
+                  ...option,
+                  checked: newChecked, // <-- KEY PART
+                };
+              }
+              return option;
+            }),
           };
         }
         return section;
@@ -206,7 +221,6 @@ const Topics = () => {
                             ) : (
                               <ChevronRight className="w-3 h-3 text-gray-600" />
                             )} */}
-                            
 
                             <label
                               key={option.topicId}
@@ -220,11 +234,11 @@ const Topics = () => {
                                     section.topicId,
                                     option.topicId,
                                     option.name
-                                    //option.topicId
                                   )
                                 }
                                 className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                               />
+
                               <span className="text-gray-700 text-sm">
                                 {option.name}
                               </span>
@@ -285,7 +299,11 @@ const Topics = () => {
               size={8}
             >
               {selectedTopics.map((topic, index) => (
-                <option key={index} value={topic} className="text-gray-600 font-md">
+                <option
+                  key={index}
+                  value={topic}
+                  className="text-gray-600 font-md"
+                >
                   {topic}
                 </option>
               ))}
