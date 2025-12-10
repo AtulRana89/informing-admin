@@ -466,7 +466,7 @@ const Users = () => {
               <thead className="bg-gray-100">
                 <tr>
                   <th className="w-10 px-4 py-3 border border-gray-300">
-                    <input
+                    {/* <input
                       type="checkbox"
                       onChange={handleSelectAll}
                       checked={
@@ -474,7 +474,8 @@ const Users = () => {
                         selectedUsers.length === users.length
                       }
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                    />
+                    /> */}
+                    Mark As Duplicate
                   </th>
                   <th className="text-left px-4 py-3 font-semibold text-gray-700 border border-gray-300">
                     User Name
@@ -507,7 +508,7 @@ const Users = () => {
                       }
                     >
                       <td
-                        className="px-4 py-4 border border-gray-300"
+                        className="px-4 py-4 border border-gray-300 flex justify-center "
                         onClick={(e) => e.stopPropagation()}
                       >
                         {/* <input
