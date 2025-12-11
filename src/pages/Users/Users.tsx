@@ -455,16 +455,7 @@ const Users = () => {
             <table className="w-full border-collapse">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="w-10 px-4 py-3 border border-gray-300">
-                    {/* <input
-                      type="checkbox"
-                      onChange={handleSelectAll}
-                      checked={
-                        users.length > 0 &&
-                        selectedUsers.length === users.length
-                      }
-                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                    /> */}
+                  <th className="w-10 px-4 py-3  font-semibold text-gray-700 border border-gray-300">
                     Mark As Duplicate
                   </th>
                   <th className="text-left px-4 py-3 font-semibold text-gray-700 border border-gray-300">
